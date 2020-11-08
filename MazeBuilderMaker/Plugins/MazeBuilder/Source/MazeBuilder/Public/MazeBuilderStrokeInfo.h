@@ -7,6 +7,7 @@
 #include "Editor.h"
 #include "UObject/ConstructorHelpers.h"
 #include "MazeBuilderPathInfo.h"
+#include "MazeBuilderBrushTemplate.h"
 
 /**
  *
@@ -26,7 +27,7 @@ public:
 	int level;
 	int row;
 	int col;
-	AActor* obj;
+	AMazeBuilderBrushTemplate* obj;
 	TSharedPtr<FMazeBuilderPathInfo> path;
 	FString ToString();
 };

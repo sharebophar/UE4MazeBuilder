@@ -18,8 +18,12 @@ private:
 public:
 	FMazeBuilderUltility();
 	~FMazeBuilderUltility();
-	static FString HexToBin(FString hexStr);
-	static FString BinToHex(FString binStr, bool bIsUpper);
+	static FString IntToBin(int n);
+	static FString IntToHex(int n);
+	static int HexToInt(TCHAR hexChar);
+	static int BinToInt(FString binStr);
+	static FString HexToBin(TCHAR hexChar);
+	static FString BinToHex(FString binStr);
 	static FString GetStrokeCode(FString name);
 	static FString GetPathCode(FString name);
 	static bool LoadTextToArray(FString FileName, TArray<FString> &OutTextArray);

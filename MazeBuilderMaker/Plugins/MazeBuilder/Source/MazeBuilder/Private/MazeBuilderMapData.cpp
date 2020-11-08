@@ -81,7 +81,7 @@ TSharedPtr<FMazeBuilderStrokeInfo> FMazeBuilderMapData::GetStrokeInfoAt(int row,
 * @参数 row 地块行号
 * @参数 col 地块列号
 */
-AActor* FMazeBuilderMapData::GetStrokeAt(int row, int col)
+AMazeBuilderBrushTemplate* FMazeBuilderMapData::GetStrokeAt(int row, int col)
 {
 	TSharedPtr<FMazeBuilderStrokeInfo> stroke_info = GetStrokeInfoAt(row, col);
 	if (stroke_info != NULL) return stroke_info->obj;
@@ -97,7 +97,7 @@ AActor* FMazeBuilderMapData::GetStrokeAt(int row, int col)
 FString FMazeBuilderMapData::GetOldStrokeName(int row, int col)
 {
 	FString oldStrokeName = "0";
-	AActor* oldStrokeObj = GetStrokeAt(row, col);
+	AMazeBuilderBrushTemplate* oldStrokeObj = GetStrokeAt(row, col);
 	if(oldStrokeObj) oldStrokeName = FMazeBuilderUltility::GetStrokeCode(oldStrokeObj->GetName());
 	return oldStrokeName;
 }

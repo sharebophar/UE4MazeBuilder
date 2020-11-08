@@ -8,42 +8,80 @@ FMazeBuilderUltility::~FMazeBuilderUltility()
 {
 }
 
-FString FMazeBuilderUltility::HexToBin(FString hexStr)
+FString FMazeBuilderUltility::IntToBin(int n)
 {
-	FString Bits;
-	int32 pathInt = FCString::Atoi(*hexStr);
-	return Bits;
-	/*
-	if (e >= 'A'&&e <= 'F')
+	int m = n;
+	FString result;
+	while (m > 0)
 	{
-		int a = static_cast<int>(e - 'A' + 10);
-		*/
+		int modVar = m % 2;
+		m = m / 2;
+		result += FString::FromInt(modVar);
+	}
+	result = result.Reverse();
+	return result;
 }
 
-FString FMazeBuilderUltility::BinToHex(FString binStr,bool bIsUpper)
+FString FMazeBuilderUltility::IntToHex(int n)
 {
-	FString strHex;
-	//strHex.resize(binStr.size() * 2);
-	for (size_t i = 0; i < binStr.Len(); i++)
+	int m = n;
+	FString result;
+	while (m > 0)
 	{
-		uint8_t cTemp = binStr[i];
-		for (size_t j = 0; j < 2; j++)
-		{
-			uint8_t cCur = (cTemp & 0x0f);
-			if (cCur < 10)
-			{
-				cCur += '0';
-			}
-			else
-			{
-				cCur += ((bIsUpper ? 'A' : 'a') - 10);
-			}
-			strHex[2 * i + 1 - j] = cCur;
-			cTemp >>= 4;
-		}
+		int modVar = m % 16;
+		m = m / 16;
+		TCHAR modChar = '0';
+		if (modVar >= 0 && modVar <= 9)
+			result.AppendInt(modVar);
+		else
+			result.AppendChar(static_cast<TCHAR>(modVar - 10 + 'A'));
 	}
+	result = result.Reverse();
+	return result;
+}
 
-	return strHex;
+int FMazeBuilderUltility::HexToInt(TCHAR hexChar)
+{
+	//'A'Îª65£¬'a'Îª97£¬'0'Îª48
+	if (hexChar >= 'A' && hexChar <= 'F')
+	{
+		int a = static_cast<int>(hexChar - 'A' + 10);
+		return a;
+	}
+	else if (hexChar >= '0' && hexChar <= 9)
+	{
+		int a = static_cast<int>(hexChar - '0');
+		return a;
+	}
+	else if (hexChar >= 'a' && hexChar <= 'f')
+	{
+		int a = static_cast<int>(hexChar - 'a' + 10);
+		return a;
+	}
+	return 0;
+}
+
+int FMazeBuilderUltility::BinToInt(FString binStr)
+{
+	int result = 0;
+	int len = binStr.Len();
+	for (int i = 0; i < len; i++)
+	{
+		result += static_cast<int>(binStr[i] - '0')*FMath::Pow(2,(len-i-1));
+	}
+	return result;
+}
+
+FString FMazeBuilderUltility::HexToBin(TCHAR hexChar)
+{
+	int a = HexToInt(hexChar);
+	return IntToBin(a);
+}
+
+FString FMazeBuilderUltility::BinToHex(FString binStr)
+{
+	int a = BinToInt(binStr);
+	return IntToHex(a);
 }
 
 /*

@@ -6,6 +6,7 @@
 #include "Dialogs/Dialogs.h"
 #include "Editor.h"
 #include "UObject/ConstructorHelpers.h"
+#include "MazeBuilderUltility.h"
 /**
  *
  */

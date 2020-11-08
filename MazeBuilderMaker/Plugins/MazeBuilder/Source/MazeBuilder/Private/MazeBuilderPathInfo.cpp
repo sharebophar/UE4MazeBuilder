@@ -15,7 +15,7 @@ FMazeBuilderPathInfo::~FMazeBuilderPathInfo()
 FString FMazeBuilderPathInfo::ToString()
 {
 	FString binCode = FString(top ? "1" : "0") + FString(right ? "1" : "0")+ FString(bottom ? "1" : "0")+ FString(left ? "1" : "0");
-	FString pathCode = FMazeBuilderUltility::BinToHex(binCode,true);
+	FString pathCode = FMazeBuilderUltility::BinToHex(binCode);
 	pathCode = FString("0"); // ²âÊÔ´úÂë
 	return pathCode;
 }
@@ -27,7 +27,7 @@ FMazeBuilderPathInfo::FMazeBuilderPathInfo(FString name)
 	if (infoArr->Num() > 1)
 	{
 		FString pathStr = (*infoArr)[1];
-		pathStr = FMazeBuilderUltility::HexToBin(pathStr);
+		pathStr = FMazeBuilderUltility::HexToBin(pathStr[0]);
 		this->top = pathStr[0] == '1' ? true : false;
 		this->right = pathStr[1] == '1' ? true : false;
 		this->bottom = pathStr[2] == '1' ? true : false;

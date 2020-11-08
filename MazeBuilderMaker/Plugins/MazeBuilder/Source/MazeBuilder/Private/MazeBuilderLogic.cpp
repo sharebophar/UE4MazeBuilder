@@ -23,7 +23,9 @@ void FMazeBuilderLogic::InitMazeBuilder()
 			{
 				// 这样，场景中就会动态生成一个蓝图类实例
 				// 我们也会得到一个蓝图类基类的实例指针，并可以调用基类"AMyActor"中的函数
-				UE_LOG(LogTemp, Log, TEXT("Spawn blueprint actor! %s"));
+				FString HexStr = FMazeBuilderUltility::BinToHex("1110"); // 函数功能测试
+				FString BinStr = FMazeBuilderUltility::HexToBin('A');
+				UE_LOG(LogTemp, Log, TEXT("Spawn blueprint actor! %s,%s"),*HexStr,*BinStr);
 			}
 		}
 	}

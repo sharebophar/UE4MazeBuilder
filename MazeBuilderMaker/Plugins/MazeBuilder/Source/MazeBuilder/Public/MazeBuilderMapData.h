@@ -7,6 +7,7 @@
 #include "Editor.h"
 #include "UObject/ConstructorHelpers.h"
 #include "MazeBuilderStrokeInfo.h"
+#include "MazeBuilderBrushTemplate.h"
 #include "MazeBuilderUltility.h"
 
 /**
@@ -26,7 +27,7 @@ public:
 	void SaveMapData();
 	FVector FormatPos(FVector pos, float val, FVector gridSize);
 	TSharedPtr<FMazeBuilderStrokeInfo> GetStrokeInfoAt(int row, int col);
-	AActor* GetStrokeAt(int row, int col);
+	AMazeBuilderBrushTemplate* GetStrokeAt(int row, int col);
 	TSharedPtr<TArray<TSharedPtr<FMazeBuilderStrokeInfo>>> strokeTable = MakeShareable(new TArray<TSharedPtr<FMazeBuilderStrokeInfo>>());
 	int max_row = 0;
 	int max_col = 0;
