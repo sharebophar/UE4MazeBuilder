@@ -2,23 +2,30 @@
 
 FMazeBuilderLogic::FMazeBuilderLogic()
 {
+	
 }
+
+/*
+FMazeBuilderLogic::FMazeBuilderLogic()
+{
+}
+*/
 
 FMazeBuilderLogic::~FMazeBuilderLogic()
 {
 }
 
-void FMazeBuilderLogic::InitMazeBuilder()
+void FMazeBuilderLogic::InitMazeBuilder(int gridWidth, int gridLength, int gridSize, int cornerSize, int levelHeight, int style)
 {
 	UWorld* world = GEditor->GetEditorWorldContext().World();
 	if (world)
 	{
 		// 使用基类获取到蓝图类的资源
-		UClass* BlueprintVar = StaticLoadClass(AActor::StaticClass(), nullptr, TEXT("Blueprint'/Game/BrushTemplate/T0_0.T0_0_C'"));
+		UClass* BlueprintVar = StaticLoadClass(AMazeBuilderBrushTemplate::StaticClass(), nullptr, TEXT("Blueprint'/Game/BrushTemplate/T0_0.T0_0_C'"));
 		if (BlueprintVar != nullptr)
 		{
 			// 向场景中添加新生成的蓝图实例
-			AActor* pMyActor = world->SpawnActor<AActor>(BlueprintVar);
+			AMazeBuilderBrushTemplate* pMyActor = world->SpawnActor<AMazeBuilderBrushTemplate>(BlueprintVar);
 			if (pMyActor)
 			{
 				// 这样，场景中就会动态生成一个蓝图类实例

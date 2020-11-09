@@ -46,5 +46,5 @@ public:
 	TSharedRef<SWidget> InitInspector();
 	FReply OnInitMazeBuilderBtnClick();
 
-	TSharedPtr<FMazeBuilderLogic> logic;
+	//TSharedPtr<FMazeBuilderLogic> logic;
 };

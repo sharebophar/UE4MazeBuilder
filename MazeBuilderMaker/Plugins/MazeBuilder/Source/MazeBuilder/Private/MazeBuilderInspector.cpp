@@ -26,7 +26,6 @@ TSharedRef<SWidget> MazeBuilderInspector::InitInspector()
 	FMargin StandardPadding(6.f, 3.f);
 	FMargin StandardLeftPadding(6.f, 3.f, 3.f, 3.f);
 	FMargin StandardRightPadding(3.f, 3.f, 6.f, 3.f);
-	logic = MakeShareable(new FMazeBuilderLogic());
 	//controlRemember = TSharedPtr<ToolkitControlRemember>(new ToolkitControlRemember());
 	return  SNew(SVerticalBox)
 		+ SVerticalBox::Slot()
@@ -283,11 +282,14 @@ FReply MazeBuilderInspector::OnInitMazeBuilderBtnClick()
 	}
 	else
 	{
+		/*
 		if (logic == NULL)
 		{
 			logic = MakeShareable(new FMazeBuilderLogic());
 		}
-		logic->InitMazeBuilder();
+		*/
+		//logic->InitMazeBuilder();
+		FMazeBuilderLogic::InitMazeBuilder(gridWidth,gridLength,gridSize,cornerSize,levelHeight,style);
 	}
 	//world->PersistentLevel->SetWorldSettings();
 	return FReply::Handled();

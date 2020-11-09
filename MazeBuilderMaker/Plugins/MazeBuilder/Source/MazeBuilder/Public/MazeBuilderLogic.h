@@ -7,6 +7,7 @@
 #include "Editor.h"
 #include "UObject/ConstructorHelpers.h"
 #include "MazeBuilderUltility.h"
+#include "MazeBuilderBrushTemplate.h"
 /**
  *
  */
@@ -16,6 +17,7 @@ private:
 
 public:
 	FMazeBuilderLogic();
+	//FMazeBuilderLogic();
 	~FMazeBuilderLogic();
-	void InitMazeBuilder();
+	static void InitMazeBuilder(int gridWidth,int gridLength,int gridSize,int cornerSize,int levelHeight,int style);
 };
