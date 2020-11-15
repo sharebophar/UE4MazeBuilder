@@ -41,6 +41,8 @@ public class MazeBuilder : ModuleRules
 				"InputCore",
 				"UnrealEd",
 				"LevelEditor",
+                "MazeBuilderMaker",
+                "ProceduralMeshComponent",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

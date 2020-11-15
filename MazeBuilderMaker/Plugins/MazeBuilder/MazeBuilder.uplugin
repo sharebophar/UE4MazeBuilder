@@ -3,7 +3,7 @@
 	"Version": 1,
 	"VersionName": "1.0",
 	"FriendlyName": "MazeBuilder",
-	"Description": "",
+	"Description": "Maze Builder",
 	"Category": "Other",
 	"CreatedBy": "",
 	"CreatedByURL": "",
@@ -18,6 +18,12 @@
 			"Name": "MazeBuilder",
 			"Type": "Editor",
 			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "ProceduralMeshComponent",
+			"Enabled": true
 		}
 	]
 }
