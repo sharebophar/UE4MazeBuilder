@@ -13,6 +13,8 @@ AMazeBuilderBrushTemplate::AMazeBuilderBrushTemplate()
 	// New in UE 4.17, multi-threaded PhysX cooking.
 	mesh->bUseAsyncCooking = true;
 	Tags = { "GridDataRecorder" };
+	ColorArr.Add(FColor::White);
+	ColorArr.Add(FColor::Green);
 	InitPoints();
 	CreateMesh(pattern);
 	//Material = CreateEditorOnlyDefaultSubobject<UMaterialInterface>("recorderMaterial");
@@ -53,7 +55,7 @@ void AMazeBuilderBrushTemplate::CollectBaseMeshData(FString szPattern)
 {
 	if (szPattern == "0(0)")
 		CollVertData(Lv(LU, 0, 0), Lv(RU, 0, 0), Lv(CTR, 0, 0), Lv(RU, 0, 0), Lv(RD, 0, 0), Lv(CTR, 0, 0), Lv(RD, 0, 0), Lv(LD, 0, 0), Lv(CTR, 0, 0), Lv(LD, 0, 0), Lv(LU, 0, 0), Lv(CTR, 0, 0));
-	else if ("0(1)") {
+	else if (szPattern == "0(1)") {
 		CollVertData(Lv(LU, 0, 0), Lv(RU, 0, 0), Lv(CTR, 0, 0), Lv(RU, 0, 0), Lv(RD, 0, 0), Lv(CTR, 0, 0), Lv(RD, 0, 0), Lv(LD, 0, 0), Lv(CTR, 0, 0), Lv(LD, 0, 1), Lv(LU, 0, 1), Lv(CTR, 0, 1));
 	}
 	else if (szPattern == "0(2)") {
@@ -1070,31 +1072,23 @@ void AMazeBuilderBrushTemplate::CollectCompleteMeshData(FString szPattern)
 	}
 }
 
-void AMazeBuilderBrushTemplate::CollVertData(Vector4 pointStart,...)
+template<typename Vector4,typename ... Args> 
+void AMazeBuilderBrushTemplate::CollVertData(Vector4 vec,Args ... args)
 {
-	va_list argp;
-	va_start(argp, pointStart);
-	while (1) { 
-		Vector4 param = va_arg(argp, Vector4);
-		if (&param == NULL) 
-			break;
-		vertList.Add(param.ToVector());
-		//normalList.Add(normal);
-		FColor color = FColor::White;
-		//color = ColorArr[(int)(param.w)]; 颜色索引先不管
-		colorList.Add(color);
-		triList.Add(gTriIndex++);
-	}    
-	va_end(argp); 
+	CollVertData(vec);
+	CollVertData(args...); // 递归调用
 }
-/*
-	for (int i = 0; i < pointArgs.Length; i++) {
-		vertList.Add(pointArgs[i]);
-		//normalList.Add(normal);
-		colorList.Add(ColorArr[(int)(pointArgs[i].w)]);
-		triList.Add(gTriIndex++);
-	}
-*/
+
+template<typename Vector4>
+void AMazeBuilderBrushTemplate::CollVertData(Vector4 vec)
+{
+	vertList.Add(vec.ToVector());
+	//normalList.Add(normal);
+	FColor color = ColorArr[(vec.w)];
+	color = FColor::White; // 测试代码，先不管顶点色
+	colorList.Add(color);
+	if(gVertIndex++ % 3 == 0) triList.Add(gTriIndex++);
+}
 
 Vector4 AMazeBuilderBrushTemplate::Lv(Vector4 point, int level, int ColorIndex)
 {
@@ -1144,6 +1138,7 @@ void AMazeBuilderBrushTemplate::InitPoints()
 	vertList.Empty();
 	colorList.Empty();
 	gTriIndex = 0;
+	gVertIndex = 0;
 	triList.Empty();
 }
 

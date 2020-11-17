@@ -13,7 +13,7 @@ public:
 	float x;
 	float y;
 	float z;
-	float w;
+	int w;
 
 	Vector4()
 	{
@@ -23,7 +23,7 @@ public:
 		this->w = 0;
 	}
 
-	Vector4(float x, float y, float z, float w = 0)
+	Vector4(float x, float y, float z, int w = 0)
 	{
 		this->x = x;
 		this->y = y;
@@ -108,6 +108,7 @@ public:
 	TArray<FColor> colorList;
 	TArray<int> triList;
 	int gTriIndex = 0;
+	int gVertIndex = 0;
 	UProceduralMeshComponent* mesh;
 	/**
 	* 根据pattern规则创建不同的顶点序列
@@ -123,7 +124,8 @@ public:
 	void CollectBaseMeshData(FString szPattern);
 	void CollectCompleteMeshData(FString szPattern);
 
-	void CollVertData(Vector4 pointArgs,...);
+	template<typename Vector4,typename ... Args> void CollVertData(Vector4 vec,Args ... args);
+	template<typename Vector4> void CollVertData(Vector4 vec);
 	//LevelUp 将点提升一个高度
 	Vector4 Lv(Vector4 point, int level = 1, int ColorIndex = 0);
 
