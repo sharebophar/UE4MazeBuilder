@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ProceduralMeshComponent.h"
+#include "MazeBuilderUltility.h"
 #include "MazeBuilderBrushTemplate.generated.h"
 
 class Vector4
@@ -66,14 +67,12 @@ public:
 	// Sets default values for this actor's properties
 	AMazeBuilderBrushTemplate();
 	UPROPERTY(EditInstanceOnly)
-	float gridSize = 1;
+	float gridSize = 100.0f;
 	UPROPERTY(EditInstanceOnly)
-	float cornerSize = 0.3f;
+	float cornerSize = 30.0f;
 	UPROPERTY(EditInstanceOnly)
-	float levelHeight = 0.5f;
-	UPROPERTY(EditInstanceOnly)
+	float levelHeight = 50.0f;
 	FString pattern = "0";
-	UPROPERTY(EditInstanceOnly)
 	FString path = "0";
 	Vector4 LU;
 	Vector4 LIU;
@@ -108,7 +107,6 @@ public:
 	TArray<FColor> colorList;
 	TArray<int> triList;
 	int gTriIndex = 0;
-	int gVertIndex = 0;
 	UProceduralMeshComponent* mesh;
 	/**
 	* 根据pattern规则创建不同的顶点序列
