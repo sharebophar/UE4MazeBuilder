@@ -85,33 +85,45 @@ FString FMazeBuilderUltility::BinToHex(FString binStr)
 }
 
 /*
-* 获取strokeCode，原名字为 strokeCode_pathCode_styleCode
+* 获取strokeCode，原名字为 templateCode_strokeCode_pathCode_styleCode
 */
 FString FMazeBuilderUltility::GetStrokeCode(FString name)
 {
 	TArray<FString> *infoArr = new TArray<FString>();
 	FString strokeCode = "0";
-	name.ParseIntoArray(*infoArr, TEXT("_"), false);
-	if (infoArr->Num() > 0)
+	name.ParseIntoArray(*infoArr, TEXT(" "), false);
+	if (infoArr->Num() > 1)
 	{
-		strokeCode = (*infoArr)[0];
+		strokeCode = (*infoArr)[1];
 	}
 	return strokeCode;
 }
 
 /*
-* 获取pathCode，原名字为 strokeCode_pathCode_styleCode
+* 获取pathCode，原名字为 templateCode_strokeCode_pathCode_styleCode
 */
 FString FMazeBuilderUltility::GetPathCode(FString name)
 {
 	TArray<FString> *infoArr = new TArray<FString>();
-	name.ParseIntoArray(*infoArr, TEXT("_"), false);
+	name.ParseIntoArray(*infoArr, TEXT(" "), false);
 	FString pathCode = "0";
-	if (infoArr->Num() > 1)
+	if (infoArr->Num() > 2)
 	{
-		pathCode = (*infoArr)[1];
+		pathCode = (*infoArr)[2];
 	}
 	return pathCode;
+}
+
+FString FMazeBuilderUltility::FormatPattern(FString name)
+{
+	TArray<FString>* infoArr = new TArray<FString>();
+	name.ParseIntoArray(*infoArr, TEXT(" "), false);
+	int arrLen = infoArr->Num();
+	FString tempCode = arrLen > 0 ? (*infoArr)[0] : "T";
+	FString strokeCode = arrLen > 1 ? (*infoArr)[1] : "0";
+	FString pathCode = arrLen > 2 ? (*infoArr)[2] : "0";
+	FString styleCode = arrLen > 3 ? (*infoArr)[3] : "0";
+	return tempCode + " " + strokeCode + " " + pathCode + " " + styleCode;
 }
 
 /**

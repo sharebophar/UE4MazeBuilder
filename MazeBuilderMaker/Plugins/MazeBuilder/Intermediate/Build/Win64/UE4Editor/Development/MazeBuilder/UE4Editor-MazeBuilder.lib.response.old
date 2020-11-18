@@ -1,0 +1,15 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UE4Editor-MazeBuilder.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"E:\WorkSpace\UE4MazeBuilder\MazeBuilderMaker\Intermediate\Build\Win64\MazeBuilderMakerEditor\Development\UnrealEd\SharedPCH.UnrealEd.h.obj"
+"E:\WorkSpace\UE4MazeBuilder\MazeBuilderMaker\Plugins\MazeBuilder\Intermediate\Build\Win64\UE4Editor\Development\MazeBuilder\MazeBuilderBrushTemplate.cpp.obj"
+"E:\WorkSpace\UE4MazeBuilder\MazeBuilderMaker\Plugins\MazeBuilder\Intermediate\Build\Win64\UE4Editor\Development\MazeBuilder\Module.MazeBuilder.cpp.obj"
+"E:\WorkSpace\UE4MazeBuilder\MazeBuilderMaker\Plugins\MazeBuilder\Intermediate\Build\Win64\UE4Editor\Development\MazeBuilder\Module.MazeBuilder.gen.cpp.obj"
+"E:\WorkSpace\UE4MazeBuilder\MazeBuilderMaker\Plugins\MazeBuilder\Intermediate\Build\Win64\UE4Editor\Development\MazeBuilder\Default.rc2.res"
+/OUT:"E:\WorkSpace\UE4MazeBuilder\MazeBuilderMaker\Plugins\MazeBuilder\Intermediate\Build\Win64\UE4Editor\Development\MazeBuilder\UE4Editor-MazeBuilder.lib"
+/INCLUDE:IMPLEMENT_MODULE_MazeBuilder

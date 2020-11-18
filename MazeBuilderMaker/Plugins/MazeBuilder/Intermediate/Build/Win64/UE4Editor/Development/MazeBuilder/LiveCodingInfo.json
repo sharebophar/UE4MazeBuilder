@@ -1,0 +1,21 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.MazeBuilder.cpp.obj": [
+			"MazeBuilder.cpp.obj",
+			"MazeBuilderEdMode.cpp.obj",
+			"MazeBuilderEdModeToolkit.cpp.obj",
+			"MazeBuilderInspector.cpp.obj",
+			"MazeBuilderLogic.cpp.obj",
+			"MazeBuilderMapData.cpp.obj",
+			"MazeBuilderPathInfo.cpp.obj",
+			"MazeBuilderStrokeInfo.cpp.obj",
+			"MazeBuilderBrushTemplate.cpp.obj",
+			"MazeBuilderUltility.cpp.obj"
+		],
+		"Module.MazeBuilder.gen.cpp.obj": [
+			"MazeBuilder.init.gen.cpp.obj",
+			"MazeBuilderBrushTemplate.gen.cpp.obj"
+		]
+	}
+}

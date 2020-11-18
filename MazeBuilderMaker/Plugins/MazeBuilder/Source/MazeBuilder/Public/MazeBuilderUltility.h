@@ -26,5 +26,6 @@ public:
 	static FString BinToHex(FString binStr);
 	static FString GetStrokeCode(FString name);
 	static FString GetPathCode(FString name);
+	static FString FormatPattern(FString name);
 	static bool LoadTextToArray(FString FileName, TArray<FString> &OutTextArray);
 };
