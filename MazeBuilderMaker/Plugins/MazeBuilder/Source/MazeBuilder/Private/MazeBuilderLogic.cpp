@@ -51,7 +51,7 @@ void FMazeBuilderLogic::DrawStroke(int gridWidth, int gridLength, int gridSize,f
 
 void FMazeBuilderLogic::ReplaceStroke(int gridWidth, int gridLength, int gridSize, AMazeBuilderBrushTemplate* stroke, float style)
 {
-
+	UE_LOG(LogTemp, Log, TEXT("Target stroke is: %s"), *(stroke->GetName()));
 }
 
 AMazeBuilderBrushTemplate* FMazeBuilderLogic::CreateStrokeByPattern(UWorld *world,FString pattern)
