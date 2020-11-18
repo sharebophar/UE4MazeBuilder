@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "MazeBuilderEdMode.h"
+//#include "MazeBuilderInspector.h"
 #include "MazeBuilderEdModeToolkit.h"
 #include "Toolkits/ToolkitManager.h"
 #include "EditorModeManager.h"
@@ -27,6 +28,7 @@ void FMazeBuilderEdMode::Enter()
 	{
 		Toolkit = MakeShareable(new FMazeBuilderEdModeToolkit);
 		Toolkit->Init(Owner->GetToolkitHost());
+		inspector = MakeShareable(new MazeBuilderInspector());
 	}
 }
 
@@ -129,15 +131,20 @@ bool FMazeBuilderEdMode::InputKey(FEditorViewportClient* ViewportClient, FViewpo
 				if (HitProxy != NULL && HitProxy->IsA(HActor::StaticGetType()))
 				{
 					HActor* ActorHit = static_cast<HActor*>(HitProxy);
-					AActor* Actor = ActorHit->Actor;
+					AActor* actor = ActorHit->Actor;
 					/*
 					if (Actor->IsChildActor())
 					{
 						Actor = Actor->GetParentActor();
 					}*/
-					if (IsActorValid(Actor))
+					AMazeBuilderBrushTemplate* stroke = (AMazeBuilderBrushTemplate*)(actor);
+					if (stroke)
 					{
-
+						inspector->ReplaceStroke(stroke);
+					}
+					else
+					{
+						inspector->DrawStroke(HitX, HitY);
 					}
 					UE_LOG(LogTemp, Warning, TEXT("Mouse Left Button Clicked!"));
 				}
@@ -157,6 +164,7 @@ bool FMazeBuilderEdMode::InputKey(FEditorViewportClient* ViewportClient, FViewpo
 	}
 	else
 	{
+		MouseState = EMouseState::LeftMouseUp;
 		//RequestDeletion();
 	}
 
@@ -166,7 +174,7 @@ bool FMazeBuilderEdMode::InputKey(FEditorViewportClient* ViewportClient, FViewpo
 bool FMazeBuilderEdMode::IsActorValid(const AActor* const Actor) const
 {
 	bool bIsValid = true;
-
+	//AMazeBuilderBrushTemplate* stroke = (AMazeBuilderBrushTemplate*)(Actor);
 	return bIsValid;
 }
 

@@ -27,5 +27,6 @@ public:
 	static FString GetStrokeCode(FString name);
 	static FString GetPathCode(FString name);
 	static FString FormatPattern(FString name);
+	static FVector FormatPos(FVector pos, float val);
 	static bool LoadTextToArray(FString FileName, TArray<FString> &OutTextArray);
 };

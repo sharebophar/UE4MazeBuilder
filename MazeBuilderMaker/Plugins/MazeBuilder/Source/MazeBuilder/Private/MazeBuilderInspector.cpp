@@ -17,8 +17,8 @@ MazeBuilderInspector::~MazeBuilderInspector()
 #define LOCTEXT_NAMESPACE "FMazeBuilderEdModeToolkit"
 TSharedRef<SWidget> MazeBuilderInspector::InitInspector()
 {
-	gridWidth = 100;
-	gridLength = 100;
+	gridWidth = 10;
+	gridLength = 10;
 	gridSize = 100;
 	cornerSize = 50;
 	levelHeight = 50;
@@ -294,6 +294,17 @@ FReply MazeBuilderInspector::OnInitMazeBuilderBtnClick()
 	//world->PersistentLevel->SetWorldSettings();
 	return FReply::Handled();
 }
+
+void MazeBuilderInspector::DrawStroke(float x, float y)
+{
+	FMazeBuilderLogic::DrawStroke(gridWidth, gridLength, gridSize,x,y, style);
+}
+
+void MazeBuilderInspector::ReplaceStroke(AMazeBuilderBrushTemplate* stroke)
+{
+	FMazeBuilderLogic::ReplaceStroke(gridWidth, gridLength, gridSize, stroke, style);
+}
+
 #undef LOCTEXT_NAMESPACE
 
 TOptional<int32> MazeBuilderInspector::GetCurrentGridWidth() const

@@ -8,6 +8,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "MazeBuilderUltility.h"
 #include "MazeBuilderBrushTemplate.h"
+#include "MazeBuilderStrokeInfo.h"
 /**
  *
  */
@@ -19,5 +20,8 @@ public:
 	FMazeBuilderLogic();
 	//FMazeBuilderLogic();
 	~FMazeBuilderLogic();
-	static void InitMazeBuilder(int gridWidth,int gridLength,int gridSize,int cornerSize,int levelHeight,int style);
+	void static InitMazeBuilder(int gridWidth,int gridLength,int gridSize,int cornerSize,int levelHeight,float style);
+	void static DrawStroke(int gridWidth,int gridLength, int gridSize,float x, float y,float style);
+	void static ReplaceStroke(int gridWidth,int gridLength,int gridSize,AMazeBuilderBrushTemplate* stroke,float style);
+	static AMazeBuilderBrushTemplate* CreateStrokeByPattern(UWorld* world, FString pattern);
 };

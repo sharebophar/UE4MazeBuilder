@@ -25,7 +25,6 @@ public:
 	FString GetOldStrokeName(int r, int c);
 	void ReadMapData(AActor mapRoot);
 	void SaveMapData();
-	FVector FormatPos(FVector pos, float val, FVector gridSize);
 	TSharedPtr<FMazeBuilderStrokeInfo> GetStrokeInfoAt(int row, int col);
 	AMazeBuilderBrushTemplate* GetStrokeAt(int row, int col);
 	TSharedPtr<TArray<TSharedPtr<FMazeBuilderStrokeInfo>>> strokeTable = MakeShareable(new TArray<TSharedPtr<FMazeBuilderStrokeInfo>>());

@@ -126,6 +126,36 @@ FString FMazeBuilderUltility::FormatPattern(FString name)
 	return tempCode + " " + strokeCode + " " + pathCode + " " + styleCode;
 }
 
+/**获得当前点最近的地块中心点坐标*/
+FVector FMazeBuilderUltility::FormatPos(FVector pos, float val)
+{
+	float x = pos.X;
+	float y = pos.Y;
+	// format "obj pre Pos %\n" obj.pos
+	if (x > 0)
+	{ //x轴正半轴
+		x = (int)(x / val); //如果x值靠右，则右移
+	}
+	else
+	{ //x轴负半轴
+		x = (int)(x / val) - 1; //否则左移
+	}
+
+	if (y > 0)
+	{ //z轴正半轴
+		y = (int)(y / val);
+	}
+	else
+	{ //y轴负半轴
+		y = (int)(y / val) - 1;
+	}
+	//2D坐标修正,x为行号，y为列号,与max的左下角原点不同，这里的原点在左上角
+	//format "x:% y:%\n" x y
+	x = x + val / 2;
+	y = y + val / 2;
+	return FVector(x, y, 0);
+}
+
 /**
 * 读取csv文件到数组中
 */

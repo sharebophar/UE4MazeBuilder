@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Toolkits/BaseToolkit.h"
 #include "MazeBuilderInspector.h"
+#include "MazeBuilderBrushTemplate.h"
 
 class FMazeBuilderEdModeToolkit : public FModeToolkit
 {
@@ -21,6 +22,8 @@ public:
 	virtual class FEdMode* GetEditorMode() const override;
 	virtual TSharedPtr<class SWidget> GetInlineContent() const override { return ToolkitWidget; }
 
+	void DrawStroke(float x, float y);
+	void ReplaceStroke(AMazeBuilderBrushTemplate stroke);
 private:
 
 	TSharedPtr<SWidget> ToolkitWidget;

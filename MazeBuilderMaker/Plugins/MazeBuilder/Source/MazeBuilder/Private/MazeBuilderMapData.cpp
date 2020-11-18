@@ -28,37 +28,6 @@ void FMazeBuilderMapData::Clear()
 	MAX_LEVEL = 1;
 }
 
-/**获得当前点最近的地块中心点坐标*/
-FVector FMazeBuilderMapData::FormatPos(FVector pos, float val, FVector gridSize)
-{
-	float x = pos.X;
-	float z = pos.Z;
-	// format "obj pre Pos %\n" obj.pos
-	if (x > 0)
-	{ //x轴正半轴
-		x = (int)(x / val); //如果x值靠右，则右移
-	}
-	else
-	{ //x轴负半轴
-		x = (int)(x / val) - 1; //否则左移
-	}
-
-	if (z > 0)
-	{ //z轴正半轴
-		z = (int)(z / val);
-	}
-	else
-	{ //y轴负半轴
-		z = (int)(z / val) - 1;
-	}
-	//2D坐标修正,x为行号，z为列号,与max的左下角原点不同，这里的原点在右上角
-	//format "x:% y:%\n" x y
-	x = x + gridSize.X / 2;
-	z = gridSize.Z / 2 + z;
-	//Utility.DebugText("... x:"+x+" z:"+z+"\n");
-	return *(new FVector(x, z, 0));
-}
-
 /**
 * 游戏运行时获取地块信息
 *

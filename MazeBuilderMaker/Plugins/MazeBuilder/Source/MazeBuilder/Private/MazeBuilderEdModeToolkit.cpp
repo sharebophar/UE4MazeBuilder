@@ -44,3 +44,4 @@ class FEdMode* FMazeBuilderEdModeToolkit::GetEditorMode() const
 }
 
 #undef LOCTEXT_NAMESPACE
+
