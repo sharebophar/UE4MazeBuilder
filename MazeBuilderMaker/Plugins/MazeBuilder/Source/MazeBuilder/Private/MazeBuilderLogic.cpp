@@ -54,6 +54,40 @@ void FMazeBuilderLogic::ReplaceStroke(int gridWidth, int gridLength, int gridSiz
 	UE_LOG(LogTemp, Log, TEXT("Target stroke is: %s"), *(stroke->GetName()));
 }
 
+TArray<FIntVector> FMazeBuilderLogic::GetBasicBrush()
+{
+	TArray<FIntVector> basicBrush;
+	basicBrush.Add(FIntVector(1, -1, 0x8)); basicBrush.Add(FIntVector(0, -1, 0xC)); basicBrush.Add(FIntVector(-1, -1, 0x4));
+	basicBrush.Add(FIntVector(1, -1, 0x9)); basicBrush.Add(FIntVector(0, -1, 0xF)); basicBrush.Add(FIntVector(-1, -1, 0x6));
+	basicBrush.Add(FIntVector(1, -1, 0x1)); basicBrush.Add(FIntVector(0, -1, 0x3)); basicBrush.Add(FIntVector(-1, -1, 0x2));
+	//确定绘制笔刷组,列偏移，行偏移，基础模型码
+	return basicBrush;
+}
+
+void Paint(FVector point)
+{
+
+	FVector2D pos = InitPaintLevel(point);
+	int row = (int)(pos.X);
+	int col = (int)(pos.Y);
+	FString error_code = DrawStroke(basicBrush, row, col, startLevel, false);
+	//Utility.DebugText("最大高度：" + startLevel);
+	int layer_count = (int)(error_code.Length / 3);
+	if (layer_count > 0)
+	{
+		for (int i = layer_count; i > 0; i--)
+		{
+			int lv = (layer_count - i) * 3 + 2;
+			Vector3[] outline_brush = GetOutCircleBrush(basicBrush, i);
+			//Utility.DebugText("扩边数量为：" + i + "绘制高度为：" + lv);
+			DrawStroke(outline_brush, row, col, lv, true);
+		}
+		DrawStroke(basicBrush, row, col, startLevel, false);
+	}
+	//        Vector3[] outline_brush = GetOutCircleBrush(basicBrush, 0);
+	//        DrawStroke(outline_brush, (int)(pos.x), (int)(pos.y), startLevel);
+}
+
 AMazeBuilderBrushTemplate* FMazeBuilderLogic::CreateStrokeByPattern(UWorld *world,FString pattern)
 {
 	//Blueprint'/Game/BrushTemplate/T_0.T_0'

@@ -23,5 +23,6 @@ public:
 	void static InitMazeBuilder(int gridWidth,int gridLength,int gridSize,int cornerSize,int levelHeight,float style);
 	void static DrawStroke(int gridWidth,int gridLength, int gridSize,float x, float y,float style);
 	void static ReplaceStroke(int gridWidth,int gridLength,int gridSize,AMazeBuilderBrushTemplate* stroke,float style);
+	static TArray<FIntVector> GetBasicBrush();
 	static AMazeBuilderBrushTemplate* CreateStrokeByPattern(UWorld* world, FString pattern);
 };
