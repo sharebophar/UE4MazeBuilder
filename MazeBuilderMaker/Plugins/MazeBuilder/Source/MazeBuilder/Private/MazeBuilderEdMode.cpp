@@ -28,7 +28,6 @@ void FMazeBuilderEdMode::Enter()
 	{
 		Toolkit = MakeShareable(new FMazeBuilderEdModeToolkit);
 		Toolkit->Init(Owner->GetToolkitHost());
-		inspector = MakeShareable(new MazeBuilderInspector());
 	}
 }
 
@@ -140,11 +139,11 @@ bool FMazeBuilderEdMode::InputKey(FEditorViewportClient* ViewportClient, FViewpo
 					AMazeBuilderBrushTemplate* stroke = (AMazeBuilderBrushTemplate*)(actor);
 					if (stroke)
 					{
-						inspector->ReplaceStroke(stroke);
+						FMazeBuilderLogic::ReplaceStroke(stroke);
 					}
 					else
 					{
-						inspector->DrawStroke(HitX, HitY);
+						FMazeBuilderLogic::DrawStroke(HitX, HitY);
 					}
 					UE_LOG(LogTemp, Warning, TEXT("Mouse Left Button Clicked!"));
 				}

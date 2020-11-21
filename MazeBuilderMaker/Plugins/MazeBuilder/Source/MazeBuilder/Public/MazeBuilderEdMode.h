@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EdMode.h"
-#include "MazeBuilderInspector.h"
+#include "MazeBuilderLogic.h"
 
 namespace EBuildState
 {
@@ -47,7 +47,7 @@ public:
 	//virtual void Render(const FSceneView* View, FViewport* Viewport, FPrimitiveDrawInterface* PDI) override;
 	//virtual void ActorSelectionChangeNotify() override;
 	bool UsesToolkits() const override;
-	TSharedPtr<MazeBuilderInspector> inspector;
+	//TSharedPtr<MazeBuilderInspector> inspector;
 	TWeakObjectPtr<AActor> HoveredActor;
 	bool IsActorValid(const AActor* const Actor) const;
 	EBuildState::Type BuildState;

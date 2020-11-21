@@ -5,17 +5,12 @@ FMazeBuilderLogic::FMazeBuilderLogic()
 	
 }
 
-/*
-FMazeBuilderLogic::FMazeBuilderLogic()
-{
-}
-*/
 
 FMazeBuilderLogic::~FMazeBuilderLogic()
 {
 }
 
-void FMazeBuilderLogic::InitMazeBuilder(int gridWidth, int gridLength, int gridSize, int cornerSize, int levelHeight, float style)
+void FMazeBuilderLogic::InitMazeBuilder()
 {
 	UWorld* world = GEditor->GetEditorWorldContext().World();
 	if (world)
@@ -44,12 +39,12 @@ void FMazeBuilderLogic::InitMazeBuilder(int gridWidth, int gridLength, int gridS
 	}
 }
 
-void FMazeBuilderLogic::DrawStroke(int gridWidth, int gridLength, int gridSize,float x,float y,float style)
+void FMazeBuilderLogic::DrawStroke(float x,float y)
 {
 	FMazeBuilderUltility::FormatPos(FVector(x, y, 0), gridSize);
 }
 
-void FMazeBuilderLogic::ReplaceStroke(int gridWidth, int gridLength, int gridSize, AMazeBuilderBrushTemplate* stroke, float style)
+void FMazeBuilderLogic::ReplaceStroke(AMazeBuilderBrushTemplate* stroke)
 {
 	UE_LOG(LogTemp, Log, TEXT("Target stroke is: %s"), *(stroke->GetName()));
 }
@@ -64,37 +59,11 @@ TArray<FIntVector> FMazeBuilderLogic::GetBasicBrush()
 	return basicBrush;
 }
 
-void Paint(FVector point)
-{
-
-	FVector2D pos = InitPaintLevel(point);
-	int row = (int)(pos.X);
-	int col = (int)(pos.Y);
-	FString error_code = DrawStroke(basicBrush, row, col, startLevel, false);
-	//Utility.DebugText("最大高度：" + startLevel);
-	int layer_count = (int)(error_code.Length / 3);
-	if (layer_count > 0)
-	{
-		for (int i = layer_count; i > 0; i--)
-		{
-			int lv = (layer_count - i) * 3 + 2;
-			Vector3[] outline_brush = GetOutCircleBrush(basicBrush, i);
-			//Utility.DebugText("扩边数量为：" + i + "绘制高度为：" + lv);
-			DrawStroke(outline_brush, row, col, lv, true);
-		}
-		DrawStroke(basicBrush, row, col, startLevel, false);
-	}
-	//        Vector3[] outline_brush = GetOutCircleBrush(basicBrush, 0);
-	//        DrawStroke(outline_brush, (int)(pos.x), (int)(pos.y), startLevel);
-}
-
 AMazeBuilderBrushTemplate* FMazeBuilderLogic::CreateStrokeByPattern(UWorld *world,FString pattern)
 {
 	//Blueprint'/Game/BrushTemplate/T_0.T_0'
 	FString BrushTemplatePath = "/Game/BrushTemplate/";
 	UClass * BlueprintVar = StaticLoadClass(AMazeBuilderBrushTemplate::StaticClass(), nullptr, *("Blueprint\'"+ BrushTemplatePath + pattern + "." + pattern + "_C\'"));
-	//UClass * BlueprintVar2 = StaticLoadClass(AMazeBuilderBrushTemplate::StaticClass(), nullptr, *FString("Blueprint\'/Game/BrushTemplate/T_aa.T_aa_C\'"));
-	//UClass * BlueprintVar3 = StaticLoadClass(AMazeBuilderBrushTemplate::StaticClass(), nullptr, TEXT("Blueprint'/Game/BrushTemplate/T_aaa.T_aaa_C'"));
 	if (BlueprintVar != nullptr)
 	{
 		// 向场景中添加新生成的蓝图实例
@@ -113,3 +82,10 @@ AMazeBuilderBrushTemplate* FMazeBuilderLogic::CreateStrokeByPattern(UWorld *worl
 	}
 	return NULL;
 }
+
+int FMazeBuilderLogic::gridWidth = 10;
+int FMazeBuilderLogic::gridLength = 10;
+float FMazeBuilderLogic::gridSize = 100;
+float FMazeBuilderLogic::cornerSize = 50;
+float FMazeBuilderLogic::levelHeight = 50;
+float FMazeBuilderLogic::style = 0;

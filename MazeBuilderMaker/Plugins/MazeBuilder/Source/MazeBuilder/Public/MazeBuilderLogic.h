@@ -20,9 +20,15 @@ public:
 	FMazeBuilderLogic();
 	//FMazeBuilderLogic();
 	~FMazeBuilderLogic();
-	void static InitMazeBuilder(int gridWidth,int gridLength,int gridSize,int cornerSize,int levelHeight,float style);
-	void static DrawStroke(int gridWidth,int gridLength, int gridSize,float x, float y,float style);
-	void static ReplaceStroke(int gridWidth,int gridLength,int gridSize,AMazeBuilderBrushTemplate* stroke,float style);
+	int static gridWidth;
+	int static gridLength;
+	float static gridSize;
+	float static cornerSize;
+	float static levelHeight;
+	float static style;
+	void static InitMazeBuilder();
+	void static DrawStroke(float x, float y);
+	void static ReplaceStroke(AMazeBuilderBrushTemplate* stroke);
 	static TArray<FIntVector> GetBasicBrush();
 	static AMazeBuilderBrushTemplate* CreateStrokeByPattern(UWorld* world, FString pattern);
 };

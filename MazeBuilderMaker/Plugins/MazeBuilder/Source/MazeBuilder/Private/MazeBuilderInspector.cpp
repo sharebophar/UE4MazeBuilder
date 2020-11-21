@@ -17,12 +17,14 @@ MazeBuilderInspector::~MazeBuilderInspector()
 #define LOCTEXT_NAMESPACE "FMazeBuilderEdModeToolkit"
 TSharedRef<SWidget> MazeBuilderInspector::InitInspector()
 {
-	gridWidth = 10;
-	gridLength = 10;
-	gridSize = 100;
-	cornerSize = 50;
-	levelHeight = 50;
-	style = 0;
+	/*
+	FMazeBuilderLogic::gridWidth = 10;
+	FMazeBuilderLogic::gridLength = 10;
+	FMazeBuilderLogic::gridSize = 100;
+	FMazeBuilderLogic::cornerSize = 50;
+	FMazeBuilderLogic::levelHeight = 50;
+	FMazeBuilderLogic::style = 0;
+	*/
 	FMargin StandardPadding(6.f, 3.f);
 	FMargin StandardLeftPadding(6.f, 3.f, 3.f, 3.f);
 	FMargin StandardRightPadding(3.f, 3.f, 6.f, 3.f);
@@ -289,7 +291,7 @@ FReply MazeBuilderInspector::OnInitMazeBuilderBtnClick()
 		}
 		*/
 		//logic->InitMazeBuilder();
-		FMazeBuilderLogic::InitMazeBuilder(gridWidth,gridLength,gridSize,cornerSize,levelHeight,style);
+		FMazeBuilderLogic::InitMazeBuilder();
 	}
 	//world->PersistentLevel->SetWorldSettings();
 	return FReply::Handled();
@@ -297,72 +299,72 @@ FReply MazeBuilderInspector::OnInitMazeBuilderBtnClick()
 
 void MazeBuilderInspector::DrawStroke(float x, float y)
 {
-	FMazeBuilderLogic::DrawStroke(gridWidth, gridLength, gridSize,x,y, style);
+	FMazeBuilderLogic::DrawStroke(x,y);
 }
 
 void MazeBuilderInspector::ReplaceStroke(AMazeBuilderBrushTemplate* stroke)
 {
-	FMazeBuilderLogic::ReplaceStroke(gridWidth, gridLength, gridSize, stroke, style);
+	FMazeBuilderLogic::ReplaceStroke(stroke);
 }
 
 #undef LOCTEXT_NAMESPACE
 
 TOptional<int32> MazeBuilderInspector::GetCurrentGridWidth() const
 {
-	return gridWidth;
+	return FMazeBuilderLogic::gridWidth;
 }
 
 void MazeBuilderInspector::OnCurrentGridWidthChanged(int32 GridWidthValue)
 {
-	gridWidth = GridWidthValue;
+	FMazeBuilderLogic::gridWidth = GridWidthValue;
 }
 
 TOptional<int32> MazeBuilderInspector::GetCurrentGridLength() const
 {
-	return gridLength;
+	return FMazeBuilderLogic::gridLength;
 }
 
 void MazeBuilderInspector::OnCurrentGridLengthChanged(int32 GridLengthValue)
 {
-	gridLength = GridLengthValue;
+	FMazeBuilderLogic::gridLength = GridLengthValue;
 }
 
 TOptional<float> MazeBuilderInspector::GetCurrentGridSize() const
 {
-	return gridSize;
+	return FMazeBuilderLogic::gridSize;
 }
 
 void MazeBuilderInspector::OnCurrentGridSizeChanged(float GridSizeValue)
 {
-	gridSize = GridSizeValue;
+	FMazeBuilderLogic::gridSize = GridSizeValue;
 }
 
 TOptional<float> MazeBuilderInspector::GetCurrentCornerSize() const
 {
-	return cornerSize;
+	return FMazeBuilderLogic::cornerSize;
 }
 
 void MazeBuilderInspector::OnCurrentCornerSizeChanged(float CornerSizeValue)
 {
-	cornerSize = CornerSizeValue;
+	FMazeBuilderLogic::cornerSize = CornerSizeValue;
 }
 
 TOptional<float> MazeBuilderInspector::GetCurrentLevelHeight() const
 {
-	return levelHeight;
+	return FMazeBuilderLogic::levelHeight;
 }
 
 void MazeBuilderInspector::OnCurrentLevelHeightChanged(float LevelHeightValue)
 {
-	levelHeight = LevelHeightValue;
+	FMazeBuilderLogic::levelHeight = LevelHeightValue;
 }
 
 TOptional<int> MazeBuilderInspector::GetCurrentStyle() const
 {
-	return style;
+	return FMazeBuilderLogic::style;
 }
 
 void MazeBuilderInspector::OnCurrentStyleChanged(int StyleValue)
 {
-	style = StyleValue;
+	FMazeBuilderLogic::style = StyleValue;
 }

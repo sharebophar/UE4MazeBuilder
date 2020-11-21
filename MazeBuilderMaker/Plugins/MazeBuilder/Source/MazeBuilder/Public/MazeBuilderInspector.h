@@ -17,27 +17,27 @@
 class MAZEBUILDER_API MazeBuilderInspector : public TSharedFromThis<MazeBuilderInspector>
 {
 private:
-	int32 gridWidth;
+	//int32 gridWidth;
 	TOptional<int32> GetCurrentGridWidth() const;
 	void OnCurrentGridWidthChanged(int32 GridWidthValue);
 
-	int32 gridLength;
+	//int32 gridLength;
 	TOptional<int32> GetCurrentGridLength() const;
 	void OnCurrentGridLengthChanged(int32 GridLengthValue);
 
-	float gridSize;
+	//float gridSize;
 	TOptional<float> GetCurrentGridSize() const;
 	void OnCurrentGridSizeChanged(float GridSizeValue);
 
-	float cornerSize;
+	//float cornerSize;
 	TOptional<float> GetCurrentCornerSize() const;
 	void OnCurrentCornerSizeChanged(float CornerSizeValue);
 
-	float levelHeight;
+	//float levelHeight;
 	TOptional<float> GetCurrentLevelHeight() const;
 	void OnCurrentLevelHeightChanged(float LevelHeightValue);
 
-	float style;
+	//float style;
 	TOptional<int> GetCurrentStyle() const;
 	void OnCurrentStyleChanged(int StyleValue);
 public:
