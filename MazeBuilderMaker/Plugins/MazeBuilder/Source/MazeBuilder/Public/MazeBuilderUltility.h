@@ -29,4 +29,5 @@ public:
 	static FString FormatPattern(FString name);
 	static FVector FormatPos(FVector pos, float val);
 	static bool LoadTextToArray(FString FileName, TArray<FString> &OutTextArray);
+	static int GetCharCount(FString target_name, char ch);
 };

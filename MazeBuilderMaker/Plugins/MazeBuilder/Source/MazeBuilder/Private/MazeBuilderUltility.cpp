@@ -173,3 +173,16 @@ bool FMazeBuilderUltility::LoadTextToArray(FString FileName, TArray<FString> &Ou
 	}
 	return true;
 }
+
+int FMazeBuilderUltility::GetCharCount(FString str, char chr)
+{
+	int count = 0;
+	for (int i = 0; i < str.Len(); i++)
+	{
+		if (str[i] == chr)
+		{
+			count = count + 1;
+		}
+	}
+	return count;
+}

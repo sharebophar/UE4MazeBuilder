@@ -42,6 +42,16 @@ public:
 		return v;
 	}
 
+	int operator[](const int& index)
+	{
+		Vector4 v;
+		if (index == 0) return (int)(v.x);
+		else if (index == 1) return (int)(v.y);
+		else if (index == 2) return (int)(v.z);
+		else if (index == 3) return v.w;
+		else return 0;
+	}
+
 	Vector4 operator-(const Vector4& other)
 	{
 		Vector4 v;

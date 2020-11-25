@@ -8,7 +8,10 @@
 #include "UObject/ConstructorHelpers.h"
 #include "MazeBuilderUltility.h"
 #include "MazeBuilderBrushTemplate.h"
+#include "MazeBuilderMapData.h"
 #include "MazeBuilderStrokeInfo.h"
+#include "AssetRegistryModule.h"
+#include "Kismet2/KismetEditorUtilities.h"
 /**
  *
  */
@@ -26,9 +29,23 @@ public:
 	float static cornerSize;
 	float static levelHeight;
 	float static style;
+	TSharedPtr<FMazeBuilderMapData> static mapData;
+	FString static BrushTemplatePath;
+	static UWorld* world;
 	void static InitMazeBuilder();
 	void static DrawStroke(float x, float y);
+	static int GetLevelCode(FString code, int level);
+	static FString DrawStroke(TArray<FVector> brushStyle, int r, int c, int drawLevel, bool isMulti);
 	void static ReplaceStroke(AMazeBuilderBrushTemplate* stroke);
 	static TArray<FIntVector> GetBasicBrush();
-	static AMazeBuilderBrushTemplate* CreateStrokeByPattern(UWorld* world, FString pattern);
+	static TArray<FIntVector> BasicBrush;
+	static TArray<Vector4> GetSrcTable();
+	static TArray<Vector4> SrcTable;
+	static FString GetStrokeByTransfer(FString name_str, int transfer);
+	//获得当前层级相位码的变换,0为不变,1为旋转90度,2为旋转180度,3为旋转270度
+	static FIntPoint GetStrokeTransfer(int level_code);
+	//获得笔刷的原始模板和变换规则
+	static TSharedPtr<FMazeBuilderStrokeInfo> GetSourceStroke(FString full_name);
+	static AMazeBuilderBrushTemplate* CreateStrokeByPattern(FString pattern);
+	static TArray<FAssetData> GetAllBrushBPData();
 };
