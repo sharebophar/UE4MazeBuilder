@@ -58,6 +58,186 @@ int FMazeBuilderLogic::GetLevelCode(FString code, int level)
 	return result;
 }
 
+FIntPoint FMazeBuilderLogic::InitPaintLevel(FVector point)
+{
+	FIntPoint pos = FMazeBuilderUltility::FormatPos(point, gridSize);
+
+	int r = pos.X;
+	int c = pos.Y;
+	// 初始化绘制层
+	if (startPaint == false)
+	{
+		FString code = mapData->GetOldStrokeName(r, c);
+		startLevel = FMazeBuilderUltility::GetCharCount(code, 'f');
+		// 匹配碰撞面的高度
+		//FVector map_pos = mc.transform.position;
+		//map_pos.y = startLevel * propLevelHeight.floatValue;
+		//mc.transform.position = map_pos;
+
+		if (startLevel >= mapData->MAX_LEVEL)
+			mapData->MAX_LEVEL = startLevel + 1;
+		//Utility.DebugText("init startLevel:" + startLevel);
+		startPaint = true;
+	}
+	return pos;
+}
+
+//计算当前笔刷集的扩边笔刷集合，圆形点扩边方式
+TArray<FIntVector> FMazeBuilderLogic::GetOutCircleBrush(TArray<FIntVector> brushTable, int size)
+{
+	if (size == 0)
+	{
+		return brushTable;
+	}
+	TArray<FIntVector> new_table;
+	int cell_num = (int)FMath::Sqrt(brushTable.Num()*1.0);
+	int new_num = cell_num / 2 + size;
+	for (int i = -new_num; i <= new_num; i++)
+	{
+		for (int j = -new_num; j <= new_num; j++)
+		{
+			if (i == -new_num)
+			{
+				if (j == -new_num)
+				{
+					new_table.Add(FIntVector(i, j, 0x0));
+				}
+				else if (j == -new_num + 1)
+				{
+					new_table.Add(FIntVector(i, j, 0x4));
+				}
+				else if (j == new_num)
+				{
+					new_table.Add(FIntVector(i, j, 0x0));
+				}
+				else if (j == new_num - 1)
+				{
+					new_table.Add(FIntVector(i, j, 0x2));
+				}
+				else
+				{
+					new_table.Add(FIntVector(i, j, 0x6));
+				}
+			}
+			else if (i == -new_num + 1)
+			{
+				if (j == -new_num)
+				{
+					new_table.Add(FIntVector(i, j, 0x4));
+				}
+				else if (j == -new_num + 1)
+				{
+					new_table.Add(FIntVector(i, j, 0xE));
+				}
+				else if (j == new_num)
+				{
+					new_table.Add(FIntVector(i, j, 0x2));
+				}
+				else if (j == new_num - 1)
+				{
+					new_table.Add(FIntVector(i, j, 0x7));
+				}
+				else
+				{
+					new_table.Add(FIntVector(i, j, 0xF));
+				}
+			}
+			else if (i == new_num)
+			{
+				if (j == -new_num)
+				{
+					new_table.Add(FIntVector(i, j, 0x0));
+				}
+				else if (j == -new_num + 1)
+				{
+					new_table.Add(FIntVector(i, j, 0x8));
+				}
+				else if (j == new_num)
+				{
+					new_table.Add(FIntVector(i, j, 0x0));
+				}
+				else if (j == new_num - 1)
+				{
+					new_table.Add(FIntVector(i, j, 0x1));
+				}
+				else
+				{
+					new_table.Add(FIntVector(i, j, 0x9));
+				}
+			}
+			else if (i == new_num - 1)
+			{
+				if (j == -new_num)
+				{
+					new_table.Add(FIntVector(i, j, 0x8));
+				}
+				else if (j == -new_num + 1)
+				{
+					new_table.Add(FIntVector(i, j, 0xD));
+				}
+				else if (j == new_num)
+				{
+					new_table.Add(FIntVector(i, j, 0x1));
+				}
+				else if (j == new_num - 1)
+				{
+					new_table.Add(FIntVector(i, j, 0xB));
+				}
+				else
+				{
+					new_table.Add(FIntVector(i, j, 0xF));
+				}
+			}
+			else
+			{
+				if (j == -new_num)
+				{
+					new_table.Add(FIntVector(i, j, 0xC));
+				}
+				else if (j == new_num)
+				{
+					new_table.Add(FIntVector(i, j, 0x3));
+				}
+				else
+				{
+					new_table.Add(FIntVector(i, j, 0xF));
+				}
+			}
+		}
+	}
+	return new_table;
+}
+
+void FMazeBuilderLogic::Paint(FVector point)
+{
+	/*
+	if (mc.brushTemplates == null) {
+		Debug.LogError("brushTemplates is null!");
+		return;
+	}
+	*/
+
+	FIntPoint pos = InitPaintLevel(point);
+	int row = pos.X;
+	int col = pos.Y;
+	FString error_code = DrawStroke(BasicBrush, row, col, startLevel, false);
+	//Utility.DebugText("最大高度：" + startLevel);
+	int layer_count = (int)(error_code.Len() / 3);
+	if (layer_count > 0)
+	{
+		for (int i = layer_count; i > 0; i--)
+		{
+			int lv = (layer_count - i) * 3 + 2;
+			TArray<FIntVector> outline_brush = GetOutCircleBrush(BasicBrush, i);
+			//Utility.DebugText("扩边数量为：" + i + "绘制高度为：" + lv);
+			DrawStroke(outline_brush, row, col, lv, true);
+		}
+		DrawStroke(BasicBrush, row, col, startLevel, false);
+	}
+	//        Vector3[] outline_brush = GetOutCircleBrush(basicBrush, 0);
+	//        DrawStroke(outline_brush, (int)(pos.x), (int)(pos.y), startLevel);
+}
+
 /** 按笔刷样式绘制地图块
 * brushStyle 为笔刷样式，默认为basicBrush
 * r 地图块行号
@@ -65,20 +245,20 @@ int FMazeBuilderLogic::GetLevelCode(FString code, int level)
 * drawLevel 当前绘制层，由鼠标落点高度决定
 * isMulti 是否叠层绘制，叠层绘制时不考虑更高层数的减层
 */
-FString FMazeBuilderLogic::DrawStroke(TArray<FVector> brushStyle, int r, int c, int drawLevel, bool isMulti)
+FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int c, int drawLevel, bool isMulti)
 {
 	//Utility.DebugText("绘制开始");
 	for (int i = 0; i < brushStyle.Num(); i++)
 	{
 		
-		FVector brush = brushStyle[i];
+		FIntVector brush = brushStyle[i];
 		if (r > 0 && r < gridWidth && c>0 && c < gridLength)
 		{
 
-			int fix_code = (int)(brush[2]); //当前层级应该填充的值，后面的全部用0填充
+			int fix_code = brush[2]; //当前层级应该填充的值，后面的全部用0填充
 			//local fix_code = brush[3] as Integer
 		   // Utility.DebugText("row num:" + (r + brush[0]) + " col num:" + (c + brush[1])+"\n");
-			FString curr_code = mapData->GetOldStrokeName(r + (int)(brush[0]), c + (int)(brush[1]));
+			FString curr_code = mapData->GetOldStrokeName(r + brush[0], c + brush[1]);
 			FString target_name = "";
 
 			//前面各层级的值都应该填充该层级的值，后面的层级消除当前层级的值
@@ -137,8 +317,8 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FVector> brushStyle, int r, int c, 
 				}
 				//mapData->strokeTable->Add(MBSI);
 ////////////////////////////////////////////////////////////
-				int row = r + (int)(brush[0]);
-				int col = c + (int)(brush[1]);
+				int row = r + brush[0];
+				int col = c + brush[1];
 				AMazeBuilderBrushTemplate* old_obj = mapData->GetStrokeAt(row, col);
 				if (old_obj != nullptr)
 					old_obj->Destroy();
@@ -307,6 +487,8 @@ TArray<FAssetData> FMazeBuilderLogic::GetAllBrushBPData()
 	return arrayAssetData;
 }
 
+bool FMazeBuilderLogic::startPaint = false;
+int FMazeBuilderLogic::startLevel = 0;
 int FMazeBuilderLogic::gridWidth = 10;
 int FMazeBuilderLogic::gridLength = 10;
 float FMazeBuilderLogic::gridSize = 100;

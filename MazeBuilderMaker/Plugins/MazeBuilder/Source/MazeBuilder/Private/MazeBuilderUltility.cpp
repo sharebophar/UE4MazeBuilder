@@ -127,7 +127,7 @@ FString FMazeBuilderUltility::FormatPattern(FString name)
 }
 
 /**获得当前点最近的地块中心点坐标*/
-FVector FMazeBuilderUltility::FormatPos(FVector pos, float val)
+FIntPoint FMazeBuilderUltility::FormatPos(FVector pos, float val)
 {
 	float x = pos.X;
 	float y = pos.Y;
@@ -149,11 +149,7 @@ FVector FMazeBuilderUltility::FormatPos(FVector pos, float val)
 	{ //y轴负半轴
 		y = (int)(y / val) - 1;
 	}
-	//2D坐标修正,x为行号，y为列号,与max的左下角原点不同，这里的原点在左上角
-	//format "x:% y:%\n" x y
-	x = x + val / 2;
-	y = y + val / 2;
-	return FVector(x, y, 0);
+	return FIntPoint(x, y);
 }
 
 /**
