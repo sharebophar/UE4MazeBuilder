@@ -71,6 +71,7 @@ FIntPoint FMazeBuilderLogic::InitPaintLevel(FVector point)
 
 		if (startLevel >= mapData->MAX_LEVEL)
 			mapData->MAX_LEVEL = startLevel + 1;
+		UE_LOG(LogTemp, Warning, TEXT("start Level is：%d"), startLevel);
 		//Utility.DebugText("init startLevel:" + startLevel);
 		startPaint = true;
 	}
@@ -290,6 +291,7 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int 
 			TSharedPtr<FMazeBuilderStrokeInfo> stroke_info = GetSourceStroke(target_name);
 			if (stroke_info != nullptr)
 			{
+				UE_LOG(LogTemp, Warning, TEXT("drawLevel:%d\t targetName:%s\t sourceStroke:%s\t transType:%d\t level%d"), drawLevel,*target_name,*(stroke_info->name),stroke_info->trans_type,stroke_info->level);
 				//Utility.DebugText("绘制层" + drawLevel + "\t填充名称：" + target_name + "\t原始笔刷：" + stroke_info.name + "\t变换方式:" + stroke_info.trans_type + "\t抬高层数：" + stroke_info.level + " \n");
 				//GameObject source_stroke = FindChildByName(mc.brushTemplates, stroke_info.name); // 笔刷原始模板
 				int change_type = stroke_info->trans_type; // 笔刷变换方式
@@ -332,6 +334,7 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int 
 			}
 			else
 			{
+				UE_LOG(LogTemp, Warning, TEXT("target name %s stroke cannot calculate the source stroke"), *target_name);
 				//Utility.DebugText(target_name+"没有计算出所得的源模型");
 				return target_name;
 			}
@@ -387,6 +390,7 @@ FString FMazeBuilderLogic::GetStrokeByTransfer(FString name_str, int transfer)
 		int new_code = (int)SrcTable[x][new_z];
 		result = result + FMazeBuilderUltility::IntToHex(new_code);
 	}
+	UE_LOG(LogTemp, Warning, TEXT("%s的%d类型转换后得到%s"), *name_str,transfer,*result);
 	//Utility.DebugText(name_str + "的" + transfer + "类型转移后得到" + result);
 	return result;
 }
@@ -421,7 +425,7 @@ TSharedPtr<FMazeBuilderStrokeInfo> FMazeBuilderLogic::GetSourceStroke(FString fu
 		else
 			fix_name = "0";
 	}
-
+	UE_LOG(LogTemp, Warning, TEXT("the fix_name of %s is :%s"), *target_name,*fix_name);
 	TArray<FAssetData>  assetData = GetAllBrushBPData();
 	for (int j = 0; j < 4; j++)
 	{
@@ -433,7 +437,6 @@ TSharedPtr<FMazeBuilderStrokeInfo> FMazeBuilderLogic::GetSourceStroke(FString fu
 				TSharedPtr<FMazeBuilderStrokeInfo> stroke_info = MakeShareable(new FMazeBuilderStrokeInfo(curr_name, j, level));
 				return stroke_info; //原始模板，旋转次数，高度层数
 			}
-			UE_LOG(LogTemp, Warning, TEXT("asset name is %s"), *assetData[index].AssetName.ToString());
 		}
 	}
 	return nullptr;
@@ -475,7 +478,7 @@ TArray<FAssetData> FMazeBuilderLogic::GetAllBrushBPData()
 	assetRegistryModule.Get().GetAssets(filter, arrayAssetData);
 	for (int index = 0; index < arrayAssetData.Num(); ++index)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("asset name is %s"), *arrayAssetData[index].AssetName.ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("asset name is %s"), *arrayAssetData[index].AssetName.ToString());
 	}
 	return arrayAssetData;
 }
