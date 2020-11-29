@@ -47,7 +47,7 @@ bool FMazeBuilderEdMode::MouseEnter(FEditorViewportClient* ViewportClient, FView
 {
 	BuildState = EBuildState::OverViewport;
 	HoveredActor.Reset();
-	UE_LOG(LogTemp, Warning, TEXT("Mouse Enter"));
+	//UE_LOG(LogTemp, Warning, TEXT("Mouse Enter"));
 	return FEdMode::MouseEnter(ViewportClient, Viewport, x, y);
 }
 
@@ -55,7 +55,7 @@ bool FMazeBuilderEdMode::MouseLeave(FEditorViewportClient* ViewportClient, FView
 {
 	BuildState = EBuildState::NotOverViewport;
 	HoveredActor.Reset();
-	UE_LOG(LogTemp, Warning, TEXT("Mouse Leave"));
+	//UE_LOG(LogTemp, Warning, TEXT("Mouse Leave"));
 	return FEdMode::MouseLeave(ViewportClient, Viewport);
 }
 

@@ -71,7 +71,7 @@ FIntPoint FMazeBuilderLogic::InitPaintLevel(FVector point)
 
 		if (startLevel >= mapData->MAX_LEVEL)
 			mapData->MAX_LEVEL = startLevel + 1;
-		UE_LOG(LogTemp, Warning, TEXT("start Level is：%d"), startLevel);
+		UE_LOG(LogTemp, Warning, TEXT("start Level is:%d"), startLevel);
 		//Utility.DebugText("init startLevel:" + startLevel);
 		startPaint = true;
 	}
@@ -245,6 +245,7 @@ void FMazeBuilderLogic::Paint(AMazeBuilderBrushTemplate* stroke)
 */
 FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int c, int drawLevel, bool isMulti)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Begin to draw!r: %d and c:%d "), r, c);
 	//Utility.DebugText("绘制开始");
 	for (int i = 0; i < brushStyle.Num(); i++)
 	{
@@ -255,6 +256,7 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int 
 
 			int fix_code = brush[2]; //当前层级应该填充的值，后面的全部用0填充
 			//local fix_code = brush[3] as Integer
+			UE_LOG(LogTemp, Warning, TEXT("row num: %d and col num:%d "), r+brush[0],c+brush[1]);
 		   // Utility.DebugText("row num:" + (r + brush[0]) + " col num:" + (c + brush[1])+"\n");
 			FString curr_code = mapData->GetOldStrokeName(r + brush[0], c + brush[1]);
 			FString target_name = "";
@@ -264,7 +266,7 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int 
 			{
 				int curr_level_code = GetLevelCode(curr_code, level);
 				//Utility.DebugText("curr_code :" + curr_code + " curr_level_code:" + curr_level_code + "level:" + level + "drawLevel：" + drawLevel);
-
+				UE_LOG(LogTemp, Warning, TEXT("old_stroke_name: %s ,curr_level_code:%d,level:%d,drawLevel:%d"), *curr_code,curr_level_code,level,drawLevel);
 				if (level <= drawLevel)
 				{
 					curr_level_code = curr_level_code | fix_code;
@@ -284,14 +286,14 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int 
 					target_name = "0";
 				//Utility.DebugText("curr_level_code:" + curr_level_code + " target_name:" + target_name + " curr_code:" + curr_code + " fix_code:" + IntAsHex(fix_code) + " level:" + level + " drawLevel：" + drawLevel+ "\n");
 			}
-
+			//target_name = "T " + target_name; // 名称加上模板前缀
 			//Utility.DebugText(" drawLevel:" + drawLevel + " curr_code:" + curr_code + " target_name:"+target_name+" \n");
 
 			//表现填充
 			TSharedPtr<FMazeBuilderStrokeInfo> stroke_info = GetSourceStroke(target_name);
 			if (stroke_info != nullptr)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("drawLevel:%d\t targetName:%s\t sourceStroke:%s\t transType:%d\t level%d"), drawLevel,*target_name,*(stroke_info->name),stroke_info->trans_type,stroke_info->level);
+				UE_LOG(LogTemp, Warning, TEXT("drawLevel:%d targetName:%s sourceStroke:%s transType:%d level%d"), drawLevel,*target_name,*(stroke_info->name),stroke_info->trans_type,stroke_info->level);
 				//Utility.DebugText("绘制层" + drawLevel + "\t填充名称：" + target_name + "\t原始笔刷：" + stroke_info.name + "\t变换方式:" + stroke_info.trans_type + "\t抬高层数：" + stroke_info.level + " \n");
 				//GameObject source_stroke = FindChildByName(mc.brushTemplates, stroke_info.name); // 笔刷原始模板
 				int change_type = stroke_info->trans_type; // 笔刷变换方式
@@ -390,7 +392,7 @@ FString FMazeBuilderLogic::GetStrokeByTransfer(FString name_str, int transfer)
 		int new_code = (int)SrcTable[x][new_z];
 		result = result + FMazeBuilderUltility::IntToHex(new_code);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("%s的%d类型转换后得到%s"), *name_str,transfer,*result);
+	UE_LOG(LogTemp, Warning, TEXT("%s transter to %s by %d"), *name_str, *result,transfer);
 	//Utility.DebugText(name_str + "的" + transfer + "类型转移后得到" + result);
 	return result;
 }
@@ -425,14 +427,14 @@ TSharedPtr<FMazeBuilderStrokeInfo> FMazeBuilderLogic::GetSourceStroke(FString fu
 		else
 			fix_name = "0";
 	}
-	UE_LOG(LogTemp, Warning, TEXT("the fix_name of %s is :%s"), *target_name,*fix_name);
+	UE_LOG(LogTemp, Warning, TEXT("full name is:%s,level is:%d,the fix_name of %s is :%s"), *full_name,level, *target_name,*fix_name);
 	TArray<FAssetData>  assetData = GetAllBrushBPData();
 	for (int j = 0; j < 4; j++)
 	{
 		FString curr_name = GetStrokeByTransfer(fix_name, j);
 		for (int index = 0; index < assetData.Num(); index++)
 		{
-			if (curr_name == assetData[index].AssetName.ToString())
+			if ("T " + curr_name == assetData[index].AssetName.ToString()) // 这里获取的"T_8"的名字实际上为 "T 8"
 			{
 				TSharedPtr<FMazeBuilderStrokeInfo> stroke_info = MakeShareable(new FMazeBuilderStrokeInfo(curr_name, j, level));
 				return stroke_info; //原始模板，旋转次数，高度层数
