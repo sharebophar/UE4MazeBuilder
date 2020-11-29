@@ -40,11 +40,6 @@ void FMazeBuilderLogic::InitMazeBuilder()
 	}
 }
 
-void FMazeBuilderLogic::DrawStroke(float x,float y)
-{
-	FMazeBuilderUltility::FormatPos(FVector(x, y, 0), gridSize);
-}
-
 //获得level层的码,就是返回倒数第level个码
 int FMazeBuilderLogic::GetLevelCode(FString code, int level)
 {
@@ -208,7 +203,7 @@ TArray<FIntVector> FMazeBuilderLogic::GetOutCircleBrush(TArray<FIntVector> brush
 	return new_table;
 }
 
-void FMazeBuilderLogic::Paint(FVector point)
+void FMazeBuilderLogic::Paint(AMazeBuilderBrushTemplate* stroke)
 {
 	/*
 	if (mc.brushTemplates == null) {
@@ -216,6 +211,8 @@ void FMazeBuilderLogic::Paint(FVector point)
 		return;
 	}
 	*/
+
+	FVector point = stroke->GetActorLocation();
 
 	FIntPoint pos = InitPaintLevel(point);
 	int row = pos.X;
@@ -349,10 +346,6 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int 
 	//format "%\t%\t%\n" (strokeTable[r][c-1].name)   (strokeTable[r][c].name)   (strokeTable[r][c+1].name)
 	//format "%\t%\t%\n" (strokeTable[r+1][c-1].name) (strokeTable[r+1][c].name) (strokeTable[r+1][c+1].name)
 	// 表现填充
-}
-void FMazeBuilderLogic::ReplaceStroke(AMazeBuilderBrushTemplate* stroke)
-{
-	UE_LOG(LogTemp, Log, TEXT("Target stroke is: %s"), *(stroke->GetName()));
 }
 
 TArray<FIntVector> FMazeBuilderLogic::GetBasicBrush()
@@ -499,4 +492,4 @@ TSharedPtr<FMazeBuilderMapData> FMazeBuilderLogic::mapData = MakeShareable(new F
 TArray<FIntVector> FMazeBuilderLogic::BasicBrush = FMazeBuilderLogic::GetBasicBrush();
 TArray<Vector4> FMazeBuilderLogic::SrcTable = FMazeBuilderLogic::GetSrcTable();
 FString FMazeBuilderLogic::BrushTemplatePath = "/Game/BrushTemplate";
-UWorld* FMazeBuilderLogic::world = GEditor->GetEditorWorldContext().World();
+UWorld* FMazeBuilderLogic::world = nullptr;

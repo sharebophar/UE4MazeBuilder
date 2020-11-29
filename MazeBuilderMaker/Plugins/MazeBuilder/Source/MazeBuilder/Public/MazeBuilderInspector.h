@@ -45,7 +45,5 @@ public:
 	~MazeBuilderInspector();
 	TSharedRef<SWidget> InitInspector();
 	FReply OnInitMazeBuilderBtnClick();
-	void DrawStroke(float x,float y);
-	void ReplaceStroke(AMazeBuilderBrushTemplate* stroke);
 	//TSharedPtr<FMazeBuilderLogic> logic;
 };

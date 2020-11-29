@@ -85,7 +85,7 @@ bool FMazeBuilderEdMode::MouseMove(FEditorViewportClient* ViewportClient, FViewp
 		}
 		if (MouseState == EMouseState::LeftMouseDown)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Mouse Drag!"));
+			//UE_LOG(LogTemp, Warning, TEXT("Mouse Drag!"));
 
 		}
 		else
@@ -139,13 +139,9 @@ bool FMazeBuilderEdMode::InputKey(FEditorViewportClient* ViewportClient, FViewpo
 					AMazeBuilderBrushTemplate* stroke = (AMazeBuilderBrushTemplate*)(actor);
 					if (stroke)
 					{
-						FMazeBuilderLogic::ReplaceStroke(stroke);
+						UE_LOG(LogTemp, Warning, TEXT("Mouse Left Button Clicked!Paint stroke"));
+						FMazeBuilderLogic::Paint(stroke);
 					}
-					else
-					{
-						FMazeBuilderLogic::DrawStroke(HitX, HitY);
-					}
-					UE_LOG(LogTemp, Warning, TEXT("Mouse Left Button Clicked!"));
 				}
 			}
 			else if(Event == IE_Released)

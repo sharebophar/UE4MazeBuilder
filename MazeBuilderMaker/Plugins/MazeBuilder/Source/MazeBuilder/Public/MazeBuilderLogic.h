@@ -40,10 +40,10 @@ public:
 	static int startLevel;
 public:
 	void static InitMazeBuilder();
-	void static DrawStroke(float x, float y);
+	//void static DrawStroke(float x, float y);
 	static int GetLevelCode(FString code, int level);
 	static FString DrawStroke(TArray<FIntVector> brushStyle, int r, int c, int drawLevel, bool isMulti);
-	void static ReplaceStroke(AMazeBuilderBrushTemplate* stroke);
+	//void static ReplaceStroke(AMazeBuilderBrushTemplate* stroke);
 	static FString GetStrokeByTransfer(FString name_str, int transfer);
 	//获得当前层级相位码的变换,0为不变,1为旋转90度,2为旋转180度,3为旋转270度
 	static FIntPoint GetStrokeTransfer(int level_code);
@@ -53,5 +53,5 @@ public:
 	static AMazeBuilderBrushTemplate* CreateStrokeByPattern(FString pattern);
 	static TArray<FAssetData> GetAllBrushBPData();
 	static FIntPoint InitPaintLevel(FVector point);
-	static void Paint(FVector point);
+	static void Paint(AMazeBuilderBrushTemplate* stroke);
 };

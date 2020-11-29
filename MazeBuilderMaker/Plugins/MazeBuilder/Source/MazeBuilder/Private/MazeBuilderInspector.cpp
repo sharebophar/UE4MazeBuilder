@@ -297,16 +297,6 @@ FReply MazeBuilderInspector::OnInitMazeBuilderBtnClick()
 	return FReply::Handled();
 }
 
-void MazeBuilderInspector::DrawStroke(float x, float y)
-{
-	FMazeBuilderLogic::DrawStroke(x,y);
-}
-
-void MazeBuilderInspector::ReplaceStroke(AMazeBuilderBrushTemplate* stroke)
-{
-	FMazeBuilderLogic::ReplaceStroke(stroke);
-}
-
 #undef LOCTEXT_NAMESPACE
 
 TOptional<int32> MazeBuilderInspector::GetCurrentGridWidth() const
