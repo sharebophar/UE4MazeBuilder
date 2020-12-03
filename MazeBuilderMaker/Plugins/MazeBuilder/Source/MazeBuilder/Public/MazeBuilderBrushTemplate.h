@@ -44,11 +44,10 @@ public:
 
 	int operator[](const int& index)
 	{
-		Vector4 v;
-		if (index == 0) return (int)(v.x);
-		else if (index == 1) return (int)(v.y);
-		else if (index == 2) return (int)(v.z);
-		else if (index == 3) return v.w;
+		if (index == 0) return (int)(this->x);
+		else if (index == 1) return (int)(this->y);
+		else if (index == 2) return (int)(this->z);
+		else if (index == 3) return this->w;
 		else return 0;
 	}
 

@@ -25,7 +25,8 @@ FString FMazeBuilderUltility::IntToBin(int n)
 FString FMazeBuilderUltility::IntToHex(int n)
 {
 	int m = n;
-	FString result;
+	if (m == 0) return "0";
+	FString result="";
 	while (m > 0)
 	{
 		int modVar = m % 16;
@@ -34,7 +35,7 @@ FString FMazeBuilderUltility::IntToHex(int n)
 		if (modVar >= 0 && modVar <= 9)
 			result.AppendInt(modVar);
 		else
-			result.AppendChar(static_cast<TCHAR>(modVar - 10 + 'A'));
+			result.AppendChar(static_cast<TCHAR>(modVar - 10 + 'a')); // 16进制一律用小写字母
 	}
 	result = result.Reverse();
 	return result;
@@ -48,7 +49,7 @@ int FMazeBuilderUltility::HexToInt(TCHAR hexChar)
 		int a = static_cast<int>(hexChar - 'A' + 10);
 		return a;
 	}
-	else if (hexChar >= '0' && hexChar <= 9)
+	else if (hexChar >= '0' && hexChar <= '9')
 	{
 		int a = static_cast<int>(hexChar - '0');
 		return a;

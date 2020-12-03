@@ -37,9 +37,9 @@ private:
 	TOptional<float> GetCurrentLevelHeight() const;
 	void OnCurrentLevelHeightChanged(float LevelHeightValue);
 
-	//float style;
-	TOptional<int> GetCurrentStyle() const;
-	void OnCurrentStyleChanged(int StyleValue);
+	//FString style;
+	FText GetCurrentStyle() const;
+	void OnCurrentStyleChanged(const FText &StyleValue);
 public:
 	MazeBuilderInspector();
 	~MazeBuilderInspector();

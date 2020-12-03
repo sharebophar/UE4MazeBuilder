@@ -29,7 +29,7 @@ public:
 	float static gridSize;
 	float static cornerSize;
 	float static levelHeight;
-	float static style;
+	FString static style;
 	TSharedPtr<FMazeBuilderMapData> static mapData;
 	FString static BrushTemplatePath;
 	static UWorld* world;

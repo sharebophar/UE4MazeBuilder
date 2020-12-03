@@ -252,14 +252,9 @@ TSharedRef<SWidget> MazeBuilderInspector::InitInspector()
 				.HAlign(HAlign_Fill)
 				.VAlign(VAlign_Center)
 				[
-					SNew(SNumericEntryBox<int>)
-					.AllowSpin(true)
-					.MinValue(1)
-					.MaxValue(9)
-					.MinSliderValue(1)
-					.MaxSliderValue(9)
-					.Value(this, &MazeBuilderInspector::GetCurrentStyle)
-					.OnValueChanged(this, &MazeBuilderInspector::OnCurrentStyleChanged)
+					SNew(SEditableText)
+					.Text(this, &MazeBuilderInspector::GetCurrentStyle)
+					.OnTextChanged(this, &MazeBuilderInspector::OnCurrentStyleChanged)
 				]
 			]
 		];
@@ -349,12 +344,14 @@ void MazeBuilderInspector::OnCurrentLevelHeightChanged(float LevelHeightValue)
 	FMazeBuilderLogic::levelHeight = LevelHeightValue;
 }
 
-TOptional<int> MazeBuilderInspector::GetCurrentStyle() const
+FText MazeBuilderInspector::GetCurrentStyle() const
 {
-	return FMazeBuilderLogic::style;
+	return FText::FromString(FMazeBuilderLogic::style);
 }
 
-void MazeBuilderInspector::OnCurrentStyleChanged(int StyleValue)
+void MazeBuilderInspector::OnCurrentStyleChanged(const FText & StyleValue)
 {
-	FMazeBuilderLogic::style = StyleValue;
+	FMazeBuilderLogic::style = StyleValue.ToString();
 }
+
+
