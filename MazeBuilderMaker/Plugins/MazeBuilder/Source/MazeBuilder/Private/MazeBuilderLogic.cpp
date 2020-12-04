@@ -272,7 +272,7 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int 
 			 for (int level = 0; level < mapData->MAX_LEVEL; level++)
 			 {
 				 int curr_level_code = GetLevelCode(curr_code, level);
-				 UE_LOG(LogTemp, Warning, TEXT("old_stroke_name: %s ,curr_level_code:%d,fix_code:%d,level:%d,drawLevel:%d"), *curr_code,curr_level_code,fix_code,level,drawLevel);
+				 //UE_LOG(LogTemp, Warning, TEXT("old_stroke_name: %s ,curr_level_code:%d,fix_code:%d,level:%d,drawLevel:%d"), *curr_code,curr_level_code,fix_code,level,drawLevel);
 				 if (level <= drawLevel)
 				 {
 					 curr_level_code = curr_level_code | fix_code;
@@ -502,8 +502,8 @@ TArray<FAssetData> FMazeBuilderLogic::GetAllBrushBPData()
 
 bool FMazeBuilderLogic::startPaint = false;
 int FMazeBuilderLogic::startLevel = 0;
-int FMazeBuilderLogic::gridWidth = 10;
-int FMazeBuilderLogic::gridLength = 10;
+int FMazeBuilderLogic::gridWidth = 25;
+int FMazeBuilderLogic::gridLength = 25;
 float FMazeBuilderLogic::gridSize = 100;
 float FMazeBuilderLogic::cornerSize = 50;
 float FMazeBuilderLogic::levelHeight = 50;

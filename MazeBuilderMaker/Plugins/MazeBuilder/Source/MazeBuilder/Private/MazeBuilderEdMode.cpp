@@ -61,6 +61,7 @@ bool FMazeBuilderEdMode::MouseLeave(FEditorViewportClient* ViewportClient, FView
 
 bool FMazeBuilderEdMode::MouseMove(FEditorViewportClient* ViewportClient, FViewport* Viewport, int32 x, int32 y)
 {
+	/*
 	if (ViewportClient == GCurrentLevelEditingViewportClient)
 	{
 		BuildState = EBuildState::OverViewport;
@@ -85,8 +86,13 @@ bool FMazeBuilderEdMode::MouseMove(FEditorViewportClient* ViewportClient, FViewp
 		}
 		if (MouseState == EMouseState::LeftMouseDown)
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("Mouse Drag!"));
-
+			UE_LOG(LogTemp, Warning, TEXT("Mouse Drag!"));
+			AMazeBuilderBrushTemplate* stroke = (AMazeBuilderBrushTemplate*)(HoveredActor.Get());
+			if (stroke)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("HoverActor Exist!Paint stroke"));
+				FMazeBuilderLogic::Paint(stroke);
+			}
 		}
 		else
 		{
@@ -98,7 +104,7 @@ bool FMazeBuilderEdMode::MouseMove(FEditorViewportClient* ViewportClient, FViewp
 		BuildState = EBuildState::NotOverViewport;
 		HoveredActor.Reset();
 	}
-
+	*/
 	return true;
 }
 
@@ -118,7 +124,7 @@ bool FMazeBuilderEdMode::InputKey(FEditorViewportClient* ViewportClient, FViewpo
 {
 	if (ViewportClient == GCurrentLevelEditingViewportClient)
 	{
-		if (Key == EKeys::LeftMouseButton && Event == IE_Pressed)
+		if (Key == EKeys::LeftMouseButton)
 		{
 			if (Event == IE_Pressed)
 			{
@@ -146,7 +152,9 @@ bool FMazeBuilderEdMode::InputKey(FEditorViewportClient* ViewportClient, FViewpo
 			}
 			else if(Event == IE_Released)
 			{
+				UE_LOG(LogTemp, Warning, TEXT("Mouse Left Button Released!Paint end!"));
 				MouseState = EMouseState::LeftMouseUp;
+				FMazeBuilderLogic::startPaint = false;
 			}
 			return true;
 		}
@@ -159,11 +167,58 @@ bool FMazeBuilderEdMode::InputKey(FEditorViewportClient* ViewportClient, FViewpo
 	}
 	else
 	{
-		MouseState = EMouseState::LeftMouseUp;
+		//MouseState = EMouseState::LeftMouseUp;
+		//FMazeBuilderLogic::startPaint = false;
 		//RequestDeletion();
 	}
 
 	return false;
+}
+
+void FMazeBuilderEdMode::Tick(FEditorViewportClient * ViewportClient, float DeltaTime)
+{
+	if (ViewportClient == GCurrentLevelEditingViewportClient)
+	{
+		BuildState = EBuildState::OverViewport;
+		HoveredActor.Reset();
+
+		int32 HitX = ViewportClient->Viewport->GetMouseX();
+		int32 HitY = ViewportClient->Viewport->GetMouseY();
+		HHitProxy* HitProxy = ViewportClient->Viewport->GetHitProxy(HitX, HitY);
+		if (HitProxy != NULL && HitProxy->IsA(HActor::StaticGetType()))
+		{
+			HActor* ActorHit = static_cast<HActor*>(HitProxy);
+			if (ActorHit->Actor != NULL)
+			{
+				AActor* Actor = ActorHit->Actor;
+				while (Actor->IsChildActor())
+				{
+					Actor = Actor->GetParentActor();
+				}
+				HoveredActor = Actor;
+				BuildState = IsActorValid(Actor) ? EBuildState::OverActor : EBuildState::OverIncompatibleActor;
+			}
+		}
+		if (MouseState == EMouseState::LeftMouseDown)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Mouse Drag!"));
+			AMazeBuilderBrushTemplate* stroke = (AMazeBuilderBrushTemplate*)(HoveredActor.Get());
+			if (stroke)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("HoverActor Exist!Paint stroke"));
+				FMazeBuilderLogic::Paint(stroke);
+			}
+		}
+		else
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Mouse Move!"));
+		}
+	}
+	else
+	{
+		BuildState = EBuildState::NotOverViewport;
+		HoveredActor.Reset();
+	}
 }
 
 bool FMazeBuilderEdMode::IsActorValid(const AActor* const Actor) const
@@ -175,7 +230,7 @@ bool FMazeBuilderEdMode::IsActorValid(const AActor* const Actor) const
 
 void FMazeBuilderEdMode::Reset()
 {
-	MouseState = EMouseState::None;
+	//MouseState = EMouseState::None;
 	BuildState = EBuildState::NotOverViewport;
 }
 
