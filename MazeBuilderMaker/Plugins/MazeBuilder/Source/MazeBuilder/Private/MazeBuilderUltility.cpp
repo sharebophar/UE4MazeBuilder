@@ -115,16 +115,17 @@ FString FMazeBuilderUltility::GetPathCode(FString name)
 	return pathCode;
 }
 
+//BrushTemplate内部调用
 FString FMazeBuilderUltility::FormatPattern(FString name)
 {
 	TArray<FString>* infoArr = new TArray<FString>();
-	name.ParseIntoArray(*infoArr, TEXT("_"), false);
+	name.ParseIntoArray(*infoArr, TEXT(" "), false);
 	int arrLen = infoArr->Num();
 	FString tempCode = arrLen > 0 ? (*infoArr)[0] : "T";
 	FString strokeCode = arrLen > 1 ? (*infoArr)[1] : "0";
 	FString pathCode = arrLen > 2 ? (*infoArr)[2] : "0";
 	FString styleCode = arrLen > 3 ? (*infoArr)[3] : "0";
-	return tempCode + "_" + strokeCode + "_" + pathCode + "_" + styleCode;
+	return tempCode + " " + strokeCode + " " + pathCode + " " + styleCode;
 }
 
 /**获得当前点最近的地块中心点坐标*/

@@ -2,7 +2,7 @@
 
 
 #include "MazeBuilderBrushTemplate.h"
-
+PRAGMA_DISABLE_OPTIMIZATION
 // Sets default values
 AMazeBuilderBrushTemplate::AMazeBuilderBrushTemplate()
 {
@@ -28,7 +28,7 @@ AMazeBuilderBrushTemplate::AMazeBuilderBrushTemplate()
 void AMazeBuilderBrushTemplate::OnConstruction(const FTransform& Transform)
 {
 	// 会在打开场景时和初始化材质时调用
-	CreateMesh(pattern);
+	CreateMesh();
 	//FlushPersistentDebugLines(GetWorld()); // 清除debugline
 	//CreateGridMesh();
 	//LoadClientData();
@@ -1149,7 +1149,7 @@ void AMazeBuilderBrushTemplate::InitPoints()
 
 }
 
-void AMazeBuilderBrushTemplate::CreateMesh(FString szpattern)
+void AMazeBuilderBrushTemplate::CreateMesh()
 {
 	vertList.Empty();
 	triList.Empty();
@@ -1157,7 +1157,7 @@ void AMazeBuilderBrushTemplate::CreateMesh(FString szpattern)
 	colorList.Empty();
 	//meshColorsCheck.Empty();
 	InitPoints();
-	CollectMeshData(szpattern);
+	CollectMeshData(pattern);
 	FOccluderVertexArray meshVertices = FOccluderVertexArray(vertList, vertList.Num());
 	FOccluderVertexArray meshNormals = FOccluderVertexArray();
 	TArray<FProcMeshTangent> meshTangent;
@@ -1166,6 +1166,20 @@ void AMazeBuilderBrushTemplate::CreateMesh(FString szpattern)
 	//mesh->SetMaterial(0, Material);
 	//mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_EngineTraceChannel2, ECollisionResponse::ECR_Block);
 	mesh->SetCollisionObjectType(ECollisionChannel::ECC_EngineTraceChannel2);
+}
+
+void AMazeBuilderBrushTemplate::UpdateMesh()
+{
+	vertList.Empty();
+	triList.Empty();
+	uvList.Empty();
+	colorList.Empty();
+	InitPoints();
+	CollectMeshData(pattern);
+	FOccluderVertexArray meshVertices = FOccluderVertexArray(vertList, vertList.Num());
+	FOccluderVertexArray meshNormals = FOccluderVertexArray();
+	TArray<FProcMeshTangent> meshTangent;
+	mesh->UpdateMeshSection(0, meshVertices, meshNormals, uvList, colorList, meshTangent);
 }
 
 // Called when the game starts or when spawned
@@ -1182,3 +1196,4 @@ void AMazeBuilderBrushTemplate::Tick(float DeltaTime)
 
 }
 
+PRAGMA_ENABLE_OPTIMIZATION

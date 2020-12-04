@@ -24,16 +24,28 @@ void FMazeBuilderLogic::InitMazeBuilder()
 				obj->SetActorLocation(strokePos);
 				//obj->Rename(TEXT("0"));
 				FString parentName = obj->GetClass()->GetSuperClass()->GetName();
-				if (parentName == "AMazeBuilderBrushTemplate")
+				if (parentName == "MazeBuilderBrushTemplate")
 				{
 					obj->gridSize = gridSize;
 					obj->cornerSize = cornerSize;
 					obj->levelHeight = levelHeight;
+					obj->name = "0";
+					obj->UpdateMesh();
 				}
 
-				TSharedPtr<FMazeBuilderStrokeInfo> MBSI = MakeShareable(new FMazeBuilderStrokeInfo("0",i,j));
-				MBSI->obj = obj;
-				mapData->strokeTable->Add(MBSI);
+				TSharedPtr<FMazeBuilderStrokeInfo> stroke_info = MakeShareable(new FMazeBuilderStrokeInfo("0",0,0));
+				stroke_info->row = i;
+				stroke_info->col = j;
+				stroke_info->obj = obj;
+
+				//mapData->strokeTable->Insert(stroke_info,0);
+				mapData->AddStrokeInfo(FIntPoint(i, j), stroke_info);
+				//mapData->strokeTable->Add(stroke_info);
+				mapData->max_col = FMath::Max<int>(j, mapData->max_col);
+				mapData->max_row = FMath::Max<int>(i, mapData->max_row);
+				mapData->min_col = mapData->min_col == 0 ? j : FMath::Min<int>(mapData->min_col, j);
+				mapData->min_row = mapData->min_row == 0 ? i : FMath::Min<int>(mapData->min_row, i);
+				//mapData->strokeTable->Add(stroke_info);
 			}
 		}
 		//TArray<FAssetData> clses = FMazeBuilderLogic::GetAllBrushBPData();
@@ -56,13 +68,10 @@ int FMazeBuilderLogic::GetLevelCode(FString code, int level)
 FIntPoint FMazeBuilderLogic::InitPaintLevel(FVector point)
 {
 	FIntPoint pos = FMazeBuilderUltility::FormatPos(point, gridSize);
-
-	int r = pos.X;
-	int c = pos.Y;
 	// 初始化绘制层
 	if (startPaint == false)
 	{
-		FString code = mapData->GetOldStrokeName(r, c);
+		FString code = mapData->GetOldStrokeName(pos);
 		startLevel = FMazeBuilderUltility::GetCharCount(code, 'f');
 		// 匹配碰撞面的高度
 		//FVector map_pos = mc.transform.position;
@@ -256,14 +265,14 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int 
 			int fix_code = brush[2]; //当前层级应该填充的值，后面的全部用0填充
 			//local fix_code = brush[3] as Integer
 			//UE_LOG(LogTemp, Warning, TEXT("row num: %d and col num:%d "), r + brush[0],c + brush[1]);
-			 FString curr_code = mapData->GetOldStrokeName(r + brush[0], c + brush[1]);
+			 FString curr_code = mapData->GetOldStrokeName(FIntPoint(r + brush[0], c + brush[1]));
 			 FString target_name = "";
 
 			 //前面各层级的值都应该填充该层级的值，后面的层级消除当前层级的值
 			 for (int level = 0; level < mapData->MAX_LEVEL; level++)
 			 {
 				 int curr_level_code = GetLevelCode(curr_code, level);
-				 //UE_LOG(LogTemp, Warning, TEXT("old_stroke_name: %s ,curr_level_code:%d,level:%d,drawLevel:%d"), *curr_code,curr_level_code,level,drawLevel);
+				 UE_LOG(LogTemp, Warning, TEXT("old_stroke_name: %s ,curr_level_code:%d,fix_code:%d,level:%d,drawLevel:%d"), *curr_code,curr_level_code,fix_code,level,drawLevel);
 				 if (level <= drawLevel)
 				 {
 					 curr_level_code = curr_level_code | fix_code;
@@ -283,8 +292,6 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int 
 					 target_name = "0";
 				 //Utility.DebugText("curr_level_code:" + curr_level_code + " target_name:" + target_name + " curr_code:" + curr_code + " fix_code:" + IntAsHex(fix_code) + " level:" + level + " drawLevel：" + drawLevel+ "\n");
 			 }
-			 //target_name = "T " + target_name; // 名称加上模板前缀
-			 //Utility.DebugText(" drawLevel:" + drawLevel + " curr_code:" + curr_code + " target_name:"+target_name+" \n");
 
 			 //表现填充
 			 TSharedPtr<FMazeBuilderStrokeInfo> stroke_info = GetSourceStroke(target_name);
@@ -294,40 +301,48 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int 
 				 int change_type = stroke_info->trans_type; // 笔刷变换方式
 				 // 左边是x的正半轴，下边是z的正半轴
 				 float fix_x = (r + brush[0] + 0.5f)*gridSize;
-				 float fix_z = (c + brush[1] + 0.5f)*gridSize;
+				 float fix_y = (c + brush[1] + 0.5f)*gridSize;
 
-				 FVector stroke_pos = FVector(fix_x, stroke_info->level*levelHeight, fix_z);// 注意通用单位到米的转换，max里1点通用单位对应0.254米
+				 FVector stroke_pos = FVector(fix_x, fix_y, stroke_info->level*levelHeight);// 注意通用单位到米的转换，max里1点通用单位对应0.254米
 				// Utility.DebugText("stroke_pos:" + stroke_pos.ToString() + " row:" + brush[0] + " colum:" + brush[2] + " target_name:" + target_name + " fix_x:" + fix_x + "fix_z:" + fix_z + "\n");
-				 AMazeBuilderBrushTemplate* stroke = CreateStrokeByPattern(stroke_info->name);
+				 AMazeBuilderBrushTemplate* stroke = CreateStrokeByPattern(stroke_info->name); // stroke_info中存储的是原生模板
 				 if (stroke == nullptr) return "0";
-				 //stroke->name = target_name;
+				 //stroke->Tags[0] = FName(target_name);
+				 stroke->name = target_name; // target_name为衍生模板
 				 //stroke.transform.Rotate(Vector3.right, -90f);
 				 //stroke.transform.Rotate(Vector3.up, change_type * 90f);
-				 stroke->SetActorLocation(stroke_pos);
 				 //obj->Rename(TEXT("0"));
 				 FString parentName = stroke->GetClass()->GetSuperClass()->GetName();
-				 if (parentName == "AMazeBuilderBrushTemplate")
+				 if (parentName == "MazeBuilderBrushTemplate")
 				 {
 					 stroke->gridSize = gridSize;
 					 stroke->cornerSize = cornerSize;
 					 stroke->levelHeight = levelHeight;
+					 stroke->UpdateMesh();
 				 }
-				 //mapData->strokeTable->Add(MBSI);
+				 stroke->SetActorRotation(FQuat(FVector(0, 0, 1), change_type * PI / 2));
+				 stroke->SetActorLocation(stroke_pos);
  ////////////////////////////////////////////////////////////
 				 int row = r + brush[0];
 				 int col = c + brush[1];
-				 AMazeBuilderBrushTemplate* old_obj = mapData->GetStrokeAt(row, col);
+				 FIntPoint pos2d = FIntPoint(row, col);
+				 AMazeBuilderBrushTemplate* old_obj = mapData->GetStrokeAt(pos2d);
 				 if (old_obj != nullptr)
-					 old_obj->Destroy();
+				 {
+					 //world->DestroyActor(old_obj);
+					 //UE_LOG(LogTemp, Warning, TEXT("stroke %s should be remove!"), *(old_obj->GetName()));
+					 world->EditorDestroyActor(old_obj,true);
+				 }
 				 stroke_info->row = row;
 				 stroke_info->col = col;
 				 stroke_info->obj = stroke;
 
-				 mapData->strokeTable->Insert(stroke_info,0);
-				 mapData->max_col = FMath::Max(col, mapData->max_col);
-				 mapData->max_row = FMath::Max(row, mapData->max_row);
-				 mapData->min_col = mapData->min_col == 0 ? col : FMath::Min(mapData->min_col, col);
-				 mapData->min_row = mapData->min_row == 0 ? row : FMath::Min(mapData->min_row, row);
+				 mapData->AddStrokeInfo(pos2d,stroke_info);
+				 //mapData->strokeTable->Add(stroke_info);
+				 mapData->max_col = FMath::Max<int>(col, mapData->max_col);
+				 mapData->max_row = FMath::Max<int>(row, mapData->max_row);
+				 mapData->min_col = mapData->min_col == 0 ? col : FMath::Min<int>(mapData->min_col, col);
+				 mapData->min_row = mapData->min_row == 0 ? row : FMath::Min<int>(mapData->min_row, row);
 				 //stroke.transform.parent = mc.mapRoot.transform;
 			 }
 			 else
@@ -352,8 +367,8 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int 
 TArray<FIntVector> FMazeBuilderLogic::GetBasicBrush()
 {
 	TArray<FIntVector> basicBrush;
-	basicBrush.Add(FIntVector(1, -1, 0x8)); basicBrush.Add(FIntVector(0, -1, 0xC)); basicBrush.Add(FIntVector(-1, -1, 0x4));
-	basicBrush.Add(FIntVector(1, -1, 0x9)); basicBrush.Add(FIntVector(0, -1, 0xF)); basicBrush.Add(FIntVector(-1, -1, 0x6));
+	basicBrush.Add(FIntVector(1,  1, 0x8)); basicBrush.Add(FIntVector(0,  1, 0xC)); basicBrush.Add(FIntVector(-1,  1, 0x4));
+	basicBrush.Add(FIntVector(1,  0, 0x9)); basicBrush.Add(FIntVector(0,  0, 0xF)); basicBrush.Add(FIntVector(-1,  0, 0x6));
 	basicBrush.Add(FIntVector(1, -1, 0x1)); basicBrush.Add(FIntVector(0, -1, 0x3)); basicBrush.Add(FIntVector(-1, -1, 0x2));
 	//确定绘制笔刷组,列偏移，行偏移，基础模型码
 	return basicBrush;

@@ -11,16 +11,16 @@ FMazeBuilderMapData::~FMazeBuilderMapData()
 FString FMazeBuilderMapData::ToString()
 {
 	FString str;
-	for (int i = 0; i < strokeTable->Num(); i++)
+	for (int i = 0; i < strokeMap.Num(); i++)
 	{
-		str.Append((*strokeTable)[i]->ToString());
+		str.Append(strokeMap[i]->ToString());
 	}
 	return str;
 }
 
 void FMazeBuilderMapData::Clear()
 {
-	strokeTable->Empty();
+	strokeMap.Empty();
 	max_row = 0;
 	max_col = 0;
 	min_row = 0;
@@ -31,43 +31,43 @@ void FMazeBuilderMapData::Clear()
 /**
 * 游戏运行时获取地块信息
 *
-* @参数 row 地块行号
-* @参数 col 地块列号
+* @参数 pos 为二维坐标位置
 */
-TSharedPtr<FMazeBuilderStrokeInfo> FMazeBuilderMapData::GetStrokeInfoAt(int row, int col)
+TSharedPtr<FMazeBuilderStrokeInfo> FMazeBuilderMapData::GetStrokeInfoAt(FIntPoint pos)
 {
-	for (int i = 0; i < strokeTable->Num(); i++)
-	{
-		if ((*strokeTable)[i]->row == row && (*strokeTable)[i]->col == col)
-			return (*strokeTable)[i];
-	}
+	if(pos.X>=0&&pos.Y>=0) return strokeMap[pos];
 	return NULL;
 }
 
 /**
 * 地块编辑器编辑替换时使用
 *
-* @参数 row 地块行号
-* @参数 col 地块列号
+* @参数 pos 为二维坐标位置
 */
-AMazeBuilderBrushTemplate* FMazeBuilderMapData::GetStrokeAt(int row, int col)
+AMazeBuilderBrushTemplate* FMazeBuilderMapData::GetStrokeAt(FIntPoint pos)
 {
-	TSharedPtr<FMazeBuilderStrokeInfo> stroke_info = GetStrokeInfoAt(row, col);
+	TSharedPtr<FMazeBuilderStrokeInfo> stroke_info = GetStrokeInfoAt(pos);
 	if (stroke_info != NULL) return stroke_info->obj;
 	return NULL;
+}
+
+void FMazeBuilderMapData::AddStrokeInfo(FIntPoint pos,TSharedPtr<FMazeBuilderStrokeInfo> stroke)
+{
+	//TSharedPtr<FMazeBuilderStrokeInfo> oldStroke = GetStrokeInfoAt(pos);
+	//if (oldStroke != nullptr) strokeMap.Remove(pos); 
+	strokeMap.Add(pos,stroke);// Add本身就会覆盖相同键的值
 }
 
 /**
 * 获取地块上的原始块的名称,便于计算衍生地块名
 *
-* @参数 row 地块行号
-* @参数 col 地块列号
+* @参数 pos 为二维坐标位置
 */
-FString FMazeBuilderMapData::GetOldStrokeName(int row, int col)
+FString FMazeBuilderMapData::GetOldStrokeName(FIntPoint pos)
 {
 	FString oldStrokeName = "0";
-	AMazeBuilderBrushTemplate* oldStrokeObj = GetStrokeAt(row, col);
-	if(oldStrokeObj) oldStrokeName = FMazeBuilderUltility::GetStrokeCode(oldStrokeObj->GetName());
+	AMazeBuilderBrushTemplate* oldStrokeObj = GetStrokeAt(pos);
+	if(oldStrokeObj) oldStrokeName = FMazeBuilderUltility::GetStrokeCode(oldStrokeObj->name);
 	return oldStrokeName;
 }
 
@@ -78,7 +78,7 @@ FString FMazeBuilderMapData::GetOldStrokeName(int row, int col)
 
 void FMazeBuilderMapData::ReadMapData(AActor mapRoot)
 {
-	strokeTable->Empty();
+	strokeMap.Empty();
 	FWorldContext worldContext = GEditor->GetEditorWorldContext();
 	UWorld *world = (&worldContext)->World();
 	if (world == NULL) return;

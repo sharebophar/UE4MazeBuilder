@@ -81,6 +81,9 @@ public:
 	float cornerSize = 30.0f;
 	UPROPERTY(EditInstanceOnly)
 	float levelHeight = 50.0f;
+	//在场景中生成的对象时，用该name记录stroke的衍生模板名字,调试时临时打开
+	UPROPERTY(EditInstanceOnly)
+	FString name = "";
 	FString pattern = "0";
 	FString path = "0";
 	Vector4 LU;
@@ -144,9 +147,9 @@ public:
 
 	void InitPoints();
 
-	void CreateMesh(FString pattern);
+	void CreateMesh();
 
-	//void UpdateMesh();
+	void UpdateMesh();
 
 protected:
 	// Called when the game starts or when spawned
