@@ -228,9 +228,9 @@ void AMazeBuilderBrushTemplate::CollectCompleteMeshData(FString szPattern)
 			Lv(RIU, 2), Lv(RIUI, 2), Lv(RIU), Lv(RIU), Lv(RIUI, 2), Lv(RIUI),
 			Lv(RIUI, 2), Lv(RUI, 2), Lv(RIUI), Lv(RIUI), Lv(RUI, 2), Lv(RUI),
 			Lv(LU), Lv(RIU), Lv(LUI), Lv(LUI), Lv(RIU), Lv(RIUI),
-			Lv(RIUI), Lv(RUI), Lv(RID), Lv(RID), Lv(RUI), Lv(RD),
-			Lv(LUI), Lv(RIUI), Lv(RID), LUI, RID, LD,
-			Lv(LUI), Lv(RID), LUI, LUI, Lv(RID), RID
+			Lv(LUI),Lv(RIUI),Lv(LD),LID,RUI,RD,
+			Lv(RIUI),Lv(RUI),Lv(LD),Lv(LD),Lv(RUI),Lv(LID),
+			Lv(LID),Lv(RUI),LID,LID,Lv(RUI),RUI
 		);
 	}
 	else if (szPattern == "T 117 0 0") {
@@ -238,9 +238,9 @@ void AMazeBuilderBrushTemplate::CollectCompleteMeshData(FString szPattern)
 			Lv(RIU, 3), Lv(RIUI, 3), Lv(RIU), Lv(RIU), Lv(RIUI, 3), Lv(RIUI),
 			Lv(RIUI, 3), Lv(RUI, 3), Lv(RIUI), Lv(RIUI), Lv(RUI, 3), Lv(RUI),
 			Lv(LU), Lv(RIU), Lv(LUI), Lv(LUI), Lv(RIU), Lv(RIUI),
-			Lv(RIUI), Lv(RUI), Lv(RID), Lv(RID), Lv(RUI), Lv(RD),
-			Lv(LUI), Lv(RIUI), Lv(RID), LUI, RID, LD,
-			Lv(LUI), Lv(RID), LUI, LUI, Lv(RID), RID
+			Lv(LUI), Lv(RIUI), Lv(LD), LID, RUI, RD,
+			Lv(RIUI), Lv(RUI), Lv(LD), Lv(LD), Lv(RUI), Lv(LID),
+			Lv(LID), Lv(RUI), LID, LID, Lv(RUI), RUI
 		);
 	}
 	else if (szPattern == "T 177 0 0") {
@@ -248,9 +248,9 @@ void AMazeBuilderBrushTemplate::CollectCompleteMeshData(FString szPattern)
 			Lv(RIU, 3), Lv(RIUI, 3), Lv(RIU, 2), Lv(RIU, 2), Lv(RIUI, 3), Lv(RIUI, 2),
 			Lv(RIUI, 3), Lv(RUI, 3), Lv(RIUI, 2), Lv(RIUI, 2), Lv(RUI, 3), Lv(RUI, 2),
 			Lv(LU, 2), Lv(RIU, 2), Lv(LUI, 2), Lv(LUI, 2), Lv(RIU, 2), Lv(RIUI, 2),
-			Lv(RIUI, 2), Lv(RUI, 2), Lv(RID, 2), Lv(RID, 2), Lv(RUI, 2), Lv(RD, 2),
-			Lv(LUI, 2), Lv(RIUI, 2), Lv(RID, 2), LUI, RID, LD,
-			Lv(LUI, 2), Lv(RID, 2), LUI, LUI, Lv(RID, 2), RID
+			Lv(LUI,2), Lv(RIUI,2), Lv(LD,2), LID, RUI, RD,
+			Lv(RIUI,2), Lv(RUI,2), Lv(LD,2), Lv(LD,2), Lv(RUI,2), Lv(LID,2),
+			Lv(LID,2), Lv(RUI,2), LID, LID, Lv(RUI,2), RUI
 		);
 	}
 	else if (szPattern == "T 2 0 0") {
