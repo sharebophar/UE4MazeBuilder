@@ -20,7 +20,7 @@ void FMazeBuilderLogic::InitMazeBuilder()
 			for (int j = 0; j < gridWidth; j++)
 			{
 				FVector strokePos = FVector((i + 0.5) * gridSize, (j + 0.5) * gridSize, 0.0f);
-				AMazeBuilderBrushTemplate* obj = FMazeBuilderLogic::CreateStrokeByPattern("0");
+				AMazeBuilderBrushTemplate* obj = CreateStrokeByPattern("0");
 				obj->SetActorLocation(strokePos);
 				//obj->Rename(TEXT("0"));
 				FString parentName = obj->GetClass()->GetSuperClass()->GetName();
@@ -456,11 +456,17 @@ TSharedPtr<FMazeBuilderStrokeInfo> FMazeBuilderLogic::GetSourceStroke(FString fu
 	return nullptr;
 }
 
+UClass* FMazeBuilderLogic::LoadBrushClass(FString pattern)
+{
+	FString szPattern = FMazeBuilderLogic::style + "_" + pattern;
+	UClass * BlueprintVar = StaticLoadClass(AMazeBuilderBrushTemplate::StaticClass(), nullptr, *("Blueprint\'" + BrushTemplatePath + "/" + szPattern + "." + szPattern + "_C\'"));
+	return BlueprintVar;
+}
+
 AMazeBuilderBrushTemplate* FMazeBuilderLogic::CreateStrokeByPattern(FString pattern)
 {
 	//Blueprint'/Game/BrushTemplate/T_0.T_0'
-	FString szPattern = FMazeBuilderLogic::style + "_" + pattern;
-	UClass * BlueprintVar = StaticLoadClass(AMazeBuilderBrushTemplate::StaticClass(), nullptr, *("Blueprint\'"+ BrushTemplatePath +"/"+ szPattern + "." + szPattern + "_C\'"));
+	UClass* BlueprintVar = LoadBrushClass(pattern);
 	if (BlueprintVar != nullptr && world)
 	{
 		// 向场景中添加新生成的蓝图实例
@@ -500,7 +506,181 @@ TArray<FAssetData> FMazeBuilderLogic::GetAllBrushBPData()
 	return arrayAssetData;
 }
 
+/*
+* 绘制路径
+*/
+void FMazeBuilderLogic::DrawPath(FVector point)
+{
+	TArray<FVector> pathPointList = GetPathPointList(point);
+	FVector gridPoint = pathPointList[0];
+	FVector nextPoint = pathPointList[1];
+	// 根据当前点与下个点的坐标判定路径方位，并写入对应地块中，暂时显示Gizmo路径线条，之后再考虑使用地块表现
+	FIntPoint grid_pos = InitPaintLevel(gridPoint);
+	TSharedPtr<FMazeBuilderStrokeInfo>  grid_stroke_info = mapData->GetStrokeInfoAt(grid_pos);
+
+	if (grid_stroke_info == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("grid stroke is null"));
+		return;
+	}
+
+	FIntPoint next_pos = InitPaintLevel(nextPoint);
+	TSharedPtr<FMazeBuilderStrokeInfo> next_stroke_info = mapData->GetStrokeInfoAt(next_pos);
+
+	if (next_stroke_info == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("next stroke is null"));
+		return;
+	}
+
+	if (nextPoint.X < gridPoint.X)
+	{
+		grid_stroke_info->path->right = true;
+		next_stroke_info->path->left = true;
+	}
+	else if (nextPoint.X > gridPoint.X)
+	{
+		grid_stroke_info->path->left = true;
+		next_stroke_info->path->right = true;
+	}
+
+	if (nextPoint.Y < gridPoint.Y)
+	{
+		grid_stroke_info->path->top = true;
+		next_stroke_info->path->bottom = true;
+	}
+	else if (nextPoint.Y > gridPoint.Y)
+	{
+		grid_stroke_info->path->bottom = true;
+		next_stroke_info->path->top = true;
+	}
+
+	// 根据当前位置的笔刷，找到其原始笔刷和变换规则，然后通过原始笔刷的带楼梯笔刷进行变换后再替换，无法找到时则不替换
+	ReplacePathStroke(grid_stroke_info);
+	ReplacePathStroke(next_stroke_info);
+}
+
+void FMazeBuilderLogic::ReplacePathStroke(TSharedPtr<FMazeBuilderStrokeInfo> stroke_info)
+{
+	if (!world) return;
+	FString replaceName = stroke_info->name + "_" + GetSourcePath(stroke_info);
+	UE_LOG(LogTemp, Warning, TEXT("replaceName is:%s"),*replaceName);
+
+	UClass* brushClass = LoadBrushClass(replaceName);
+	if (brushClass == nullptr)
+	{
+		int index = FMath::RandRange(0, 2);
+		replaceName += "_" + FString::FromInt(index); // 原生模板的码
+		brushClass = LoadBrushClass(replaceName);
+	}
+	if (brushClass == nullptr) return;
+
+	AMazeBuilderBrushTemplate* stroke = world->SpawnActor<AMazeBuilderBrushTemplate>(brushClass);
+	//GameObject stroke = GameObject.Instantiate(child.gameObject);
+	//Undo.RegisterCreatedObjectUndo(stroke, "Replace Path stroke");
+	UE_LOG(LogTemp, Warning, TEXT("path is:%s"), *(stroke_info->path->ToString()));
+	//Utility.DebugText(stroke_info->path->ToString());
+	FString realName = FMazeBuilderUltility::GetStrokeCode(stroke_info->obj->name); 
+	stroke->name = realName + "_" + stroke_info->path->ToString(); //衍生模板码，但style是多少已经无所谓了，不处理了
+
+	FString parentName = stroke->GetClass()->GetSuperClass()->GetName();
+	if (parentName == "MazeBuilderBrushTemplate")
+	{
+		stroke->gridSize = gridSize;
+		stroke->cornerSize = cornerSize;
+		stroke->levelHeight = levelHeight;
+		stroke->UpdateMesh();
+	}
+	stroke->SetActorLocation(stroke_info->obj->GetActorLocation());
+	world->EditorDestroyActor(stroke_info->obj,true);
+	stroke_info->obj = stroke;
+	//Undo.undoRedoPerformed += UndoReplacePathStroke;
+}
+
+// 根据当前旋转角度和路径，获得原笔刷应该具有的连通方向
+FString FMazeBuilderLogic::GetSourcePath(TSharedPtr<FMazeBuilderStrokeInfo> stroke_info)
+{
+	//当前笔刷为pow(2,n)时，顺时针旋转x个90度后的path值为pow(2,(n-x)%4),这里就是根据path求n(n%4)
+	int x = stroke_info->trans_type;
+	FString pathHexStr = stroke_info->path->ToString();
+	FString pathBinStr = FMazeBuilderUltility::HexToBin(pathHexStr[0]);
+	int result = 0;
+	for (int i = 0; i < pathBinStr.Len(); i++)
+	{
+		if (pathBinStr[i] == '1')
+		{
+			int pow = ((pathBinStr.Len() - i - 1) + x + 400) % 4;
+			result += (int)FMath::Pow(2.0f, pow*1.0f);
+		}
+	}
+	FString sourcePath = FMazeBuilderUltility::IntToHex(result);
+	//Utility.DebugText("pathHexStr:" + pathHexStr + "\t pathBinStr:" + pathBinStr + "\t sourcePath is:" + sourcePath + "\t x:" + x.ToString());
+	return sourcePath;
+}
+
+/*
+* 获取道路的顶点列表，返回开始点和结束点到一个List中
+* @thePoint
+*
+*/
+TArray<FVector> FMazeBuilderLogic::GetPathPointList(FVector thePoint)
+{
+	FVector gridPoint = FVector(FMazeBuilderUltility::FormatPos(thePoint, gridSize)*gridSize);
+	gridPoint.X = gridPoint.X + 0.5f * gridSize;
+	gridPoint.Y = gridPoint.Y - 0.5f * gridSize;
+	gridPoint.Z = 0;
+	curPoint.Z = 0;
+	//DrawStrokeRect(gridPoint, 0.1f, gridPoint.y);
+	//Vector3.SignedAngle 的低版本实现
+	FVector v1 = FVector(1.0f,0.0f,0.0f);
+	FVector v2 = gridPoint - curPoint;
+	float angle = FMath::Acos(v2.CosineAngle2D(v1));
+	//float angle = Vector3.Angle(v1, v2);
+	//angle *= Mathf.Sign(Vector3.Cross(v1, v2).y);
+	angle *= FMath::Sign(FVector::CrossProduct(v1, v2).Z);
+	//float angle = Vector3.SignedAngle(Vector3.right,gridPoint-curPoint,Vector3.up);
+	FVector nextPoint = FVector(gridPoint.X, gridPoint.Y, gridPoint.Z);
+	if (angle > 135 || angle < -135)
+	{
+		// 向x正半轴延伸
+		nextPoint.X = nextPoint.X - gridSize;
+	}
+	else if (angle > 45 && angle < 135)
+	{
+		// 向z正半轴延伸
+		nextPoint.Y = nextPoint.Y - gridSize;
+	}
+	else if (angle > -45 && angle < 45)
+	{
+		// 向x负半轴延伸
+		nextPoint.X = nextPoint.X + gridSize;
+	}
+	else if (angle > -135 && angle < -45)
+	{
+		// 向z负半轴延伸
+		nextPoint.Y = nextPoint.Y + gridSize;
+	}
+
+	gridPoint.Z = GetGizmoHeight(gridPoint);
+	nextPoint.Z = GetGizmoHeight(nextPoint);
+	TArray<FVector> pointList;
+	pointList.Add(gridPoint);
+	pointList.Add(nextPoint);
+	return pointList;
+}
+
+float FMazeBuilderLogic::GetGizmoHeight(FVector thePoint)
+{
+	FIntPoint pos = FMazeBuilderUltility::FormatPos(thePoint, gridSize);
+	AMazeBuilderBrushTemplate* obj = mapData->GetStrokeAt(pos);
+	if (obj == nullptr) return 0;
+	int level = FMazeBuilderUltility::GetStrokeCode(obj->pattern).Len();
+	level = level > 0 ? level : obj->name.Len();
+	return level * levelHeight;
+}
+
 bool FMazeBuilderLogic::startPaint = false;
+FVector FMazeBuilderLogic::curPoint = FVector::ZeroVector;
 int FMazeBuilderLogic::startLevel = 0;
 int FMazeBuilderLogic::gridWidth = 25;
 int FMazeBuilderLogic::gridLength = 25;

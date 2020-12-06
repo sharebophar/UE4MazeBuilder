@@ -196,6 +196,7 @@ void FMazeBuilderEdMode::Tick(FEditorViewportClient * ViewportClient, float Delt
 					Actor = Actor->GetParentActor();
 				}
 				HoveredActor = Actor;
+				FMazeBuilderLogic::curPoint = Actor->GetActorLocation();
 				BuildState = IsActorValid(Actor) ? EBuildState::OverActor : EBuildState::OverIncompatibleActor;
 			}
 		}

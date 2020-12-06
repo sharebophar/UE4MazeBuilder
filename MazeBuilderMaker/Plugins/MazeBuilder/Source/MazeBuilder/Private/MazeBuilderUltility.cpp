@@ -184,3 +184,4 @@ int FMazeBuilderUltility::GetCharCount(FString str, char chr)
 	}
 	return count;
 }
+

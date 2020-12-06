@@ -84,7 +84,7 @@ public:
 	//在场景中生成的对象时，用该name记录stroke的衍生模板名字,调试时临时打开
 	UPROPERTY(EditInstanceOnly)
 	FString name = "";
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere)
 	bool bShowProceduralMesh = true;
 	FString pattern = "0";
 	FString path = "0";

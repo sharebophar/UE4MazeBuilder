@@ -39,8 +39,10 @@ public:
 	static TArray<Vector4> SrcTable;
 	static bool startPaint;
 	static int startLevel;
+	static FVector curPoint;
 public:
 	void static InitMazeBuilder();
+	static UClass* LoadBrushClass(FString pattern);
 	//void static DrawStroke(float x, float y);
 	static int GetLevelCode(FString code, int level);
 	static FString DrawStroke(TArray<FIntVector> brushStyle, int r, int c, int drawLevel, bool isMulti);
@@ -55,4 +57,10 @@ public:
 	static TArray<FAssetData> GetAllBrushBPData();
 	static FIntPoint InitPaintLevel(FVector point);
 	static void Paint(AMazeBuilderBrushTemplate* stroke);
+	//
+	static TArray<FVector> GetPathPointList(FVector thePoint);
+	static float GetGizmoHeight(FVector thePoint);
+	static void ReplacePathStroke(TSharedPtr<FMazeBuilderStrokeInfo> stroke_info);
+	static FString GetSourcePath(TSharedPtr<FMazeBuilderStrokeInfo> stroke_info);
+	static void DrawPath(FVector point);
 };
