@@ -109,52 +109,6 @@ TArray<FIntVector> FMazeBuilderLogic::GetOutCircleBrush(TArray<FIntVector> brush
 				}
 				else if (j == -new_num + 1)
 				{
-					new_table.Add(FIntVector(i, j, 0x4));
-				}
-				else if (j == new_num)
-				{
-					new_table.Add(FIntVector(i, j, 0x0));
-				}
-				else if (j == new_num - 1)
-				{
-					new_table.Add(FIntVector(i, j, 0x2));
-				}
-				else
-				{
-					new_table.Add(FIntVector(i, j, 0x6));
-				}
-			}
-			else if (i == -new_num + 1)
-			{
-				if (j == -new_num)
-				{
-					new_table.Add(FIntVector(i, j, 0x4));
-				}
-				else if (j == -new_num + 1)
-				{
-					new_table.Add(FIntVector(i, j, 0xE));
-				}
-				else if (j == new_num)
-				{
-					new_table.Add(FIntVector(i, j, 0x2));
-				}
-				else if (j == new_num - 1)
-				{
-					new_table.Add(FIntVector(i, j, 0x7));
-				}
-				else
-				{
-					new_table.Add(FIntVector(i, j, 0xF));
-				}
-			}
-			else if (i == new_num)
-			{
-				if (j == -new_num)
-				{
-					new_table.Add(FIntVector(i, j, 0x0));
-				}
-				else if (j == -new_num + 1)
-				{
 					new_table.Add(FIntVector(i, j, 0x8));
 				}
 				else if (j == new_num)
@@ -170,7 +124,7 @@ TArray<FIntVector> FMazeBuilderLogic::GetOutCircleBrush(TArray<FIntVector> brush
 					new_table.Add(FIntVector(i, j, 0x9));
 				}
 			}
-			else if (i == new_num - 1)
+			else if (i == -new_num + 1)
 			{
 				if (j == -new_num)
 				{
@@ -187,6 +141,52 @@ TArray<FIntVector> FMazeBuilderLogic::GetOutCircleBrush(TArray<FIntVector> brush
 				else if (j == new_num - 1)
 				{
 					new_table.Add(FIntVector(i, j, 0xB));
+				}
+				else
+				{
+					new_table.Add(FIntVector(i, j, 0xF));
+				}
+			}
+			else if (i == new_num)
+			{
+				if (j == -new_num)
+				{
+					new_table.Add(FIntVector(i, j, 0x0));
+				}
+				else if (j == -new_num + 1)
+				{
+					new_table.Add(FIntVector(i, j, 0x4));
+				}
+				else if (j == new_num)
+				{
+					new_table.Add(FIntVector(i, j, 0x0));
+				}
+				else if (j == new_num - 1)
+				{
+					new_table.Add(FIntVector(i, j, 0x2));
+				}
+				else
+				{
+					new_table.Add(FIntVector(i, j, 0x6));
+				}
+			}
+			else if (i == new_num - 1)
+			{
+				if (j == -new_num)
+				{
+					new_table.Add(FIntVector(i, j, 0x4));
+				}
+				else if (j == -new_num + 1)
+				{
+					new_table.Add(FIntVector(i, j, 0xE));
+				}
+				else if (j == new_num)
+				{
+					new_table.Add(FIntVector(i, j, 0x2));
+				}
+				else if (j == new_num - 1)
+				{
+					new_table.Add(FIntVector(i, j, 0x7));
 				}
 				else
 				{
