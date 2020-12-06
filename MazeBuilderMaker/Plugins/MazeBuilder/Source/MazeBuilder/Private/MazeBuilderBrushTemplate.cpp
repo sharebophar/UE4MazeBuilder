@@ -1108,33 +1108,34 @@ void AMazeBuilderBrushTemplate::InitPoints()
 {
 	/*Unity是右手坐标系，Max也是右手坐标系，Unreal是左手坐标系*/
 	// 切换 x = x,y = -z,z = y
-	LU = Vector4(gridSize / 2, gridSize / 2, 0);
-	LD = Vector4(gridSize / 2, -gridSize / 2, 0);
-	RU = Vector4(-gridSize / 2, gridSize / 2, 0);
-	RD = Vector4(-gridSize / 2, -gridSize / 2, 0);
+	// 为了保障Unreal和Max中的表现一致，调整坐标x=-x,y=-y
+	LU = Vector4(-gridSize / 2, -gridSize / 2, 0);
+	LD = Vector4(-gridSize / 2, gridSize / 2, 0);
+	RU = Vector4(gridSize / 2, -gridSize / 2, 0);
+	RD = Vector4(gridSize / 2, gridSize / 2, 0);
 
-	LIU = LU - Vector4(cornerSize, 0, 0);
-	RIU = RU + Vector4(cornerSize, 0, 0);
-	LID = LD - Vector4(cornerSize, 0, 0);
-	RID = RD + Vector4(cornerSize, 0, 0);
+	LIU = LU + Vector4(cornerSize, 0, 0);
+	RIU = RU - Vector4(cornerSize, 0, 0);
+	LID = LD + Vector4(cornerSize, 0, 0);
+	RID = RD - Vector4(cornerSize, 0, 0);
 
-	LUI = LU + Vector4(0, -cornerSize, 0);
-	LDI = LD - Vector4(0, -cornerSize, 0);
-	RUI = RU + Vector4(0, -cornerSize, 0);
-	RDI = RD - Vector4(0, -cornerSize, 0);
+	LUI = LU + Vector4(0, cornerSize, 0);
+	LDI = LD - Vector4(0, cornerSize, 0);
+	RUI = RU + Vector4(0, cornerSize, 0);
+	RDI = RD - Vector4(0, cornerSize, 0);
 
-	LIUI = LU + Vector4(-cornerSize, -cornerSize,0);
-	RIUI = RU + Vector4(cornerSize, -cornerSize,0);
-	LIDI = LD + Vector4(-cornerSize, cornerSize,0);
-	RIDI = RD + Vector4(cornerSize, cornerSize,0);
+	LIUI = LU + Vector4(cornerSize, cornerSize,0);
+	RIUI = RU + Vector4(-cornerSize, cornerSize,0);
+	LIDI = LD + Vector4(cornerSize, -cornerSize,0);
+	RIDI = RD + Vector4(-cornerSize, -cornerSize,0);
 
 	CTR = Vector4();
 
-	RI2DI2 = CTR + Vector4(-0.5f * cornerSize, -0.5f * cornerSize, 0, 0);
-	LI2DI2 = CTR + Vector4(0.5f * cornerSize, -0.5f * cornerSize,0, 0);
-	RI2UI2 = CTR - Vector4(0.5f * cornerSize, -0.5f * cornerSize,0, 0);
-	LI2DI = LIDI - Vector4(cornerSize, 0, 0, 0);
-	RIUI2 = RIU + Vector4(0, -2 * cornerSize, 0,0);
+	RI2DI2 = CTR + Vector4(0.5f * cornerSize, 0.5f * cornerSize, 0, 0);
+	LI2DI2 = CTR + Vector4(-0.5f * cornerSize, 0.5f * cornerSize,0, 0);
+	RI2UI2 = CTR - Vector4(-0.5f * cornerSize, 0.5f * cornerSize,0, 0);
+	LI2DI = LIDI - Vector4(-cornerSize, 0, 0, 0);
+	RIUI2 = RIU + Vector4(0, 2 * cornerSize, 0,0);
 
 	vertList.Empty();
 	colorList.Empty();
@@ -1151,6 +1152,7 @@ void AMazeBuilderBrushTemplate::InitPoints()
 
 void AMazeBuilderBrushTemplate::CreateMesh()
 {
+	if (!bShowProceduralMesh) return;
 	vertList.Empty();
 	triList.Empty();
 	uvList.Empty();
@@ -1170,6 +1172,7 @@ void AMazeBuilderBrushTemplate::CreateMesh()
 
 void AMazeBuilderBrushTemplate::UpdateMesh()
 {
+	if (!bShowProceduralMesh) return;
 	vertList.Empty();
 	triList.Empty();
 	uvList.Empty();

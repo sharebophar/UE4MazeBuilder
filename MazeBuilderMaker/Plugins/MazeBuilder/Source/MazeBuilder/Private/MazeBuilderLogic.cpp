@@ -367,9 +367,9 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int 
 TArray<FIntVector> FMazeBuilderLogic::GetBasicBrush()
 {
 	TArray<FIntVector> basicBrush;
-	basicBrush.Add(FIntVector(1,  1, 0x8)); basicBrush.Add(FIntVector(0,  1, 0xC)); basicBrush.Add(FIntVector(-1,  1, 0x4));
-	basicBrush.Add(FIntVector(1,  0, 0x9)); basicBrush.Add(FIntVector(0,  0, 0xF)); basicBrush.Add(FIntVector(-1,  0, 0x6));
-	basicBrush.Add(FIntVector(1, -1, 0x1)); basicBrush.Add(FIntVector(0, -1, 0x3)); basicBrush.Add(FIntVector(-1, -1, 0x2));
+	basicBrush.Add(FIntVector(-1, -1, 0x8)); basicBrush.Add(FIntVector(0, -1, 0xC)); basicBrush.Add(FIntVector(1, -1, 0x4));
+	basicBrush.Add(FIntVector(-1,  0, 0x9)); basicBrush.Add(FIntVector(0,  0, 0xF)); basicBrush.Add(FIntVector(1,  0, 0x6));
+	basicBrush.Add(FIntVector(-1,  1, 0x1)); basicBrush.Add(FIntVector(0,  1, 0x3)); basicBrush.Add(FIntVector(1,  1, 0x2));
 	//确定绘制笔刷组,列偏移，行偏移，基础模型码
 	return basicBrush;
 }
