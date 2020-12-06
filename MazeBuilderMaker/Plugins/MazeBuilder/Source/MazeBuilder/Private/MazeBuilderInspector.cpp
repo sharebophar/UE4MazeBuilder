@@ -257,7 +257,65 @@ TSharedRef<SWidget> MazeBuilderInspector::InitInspector()
 					.OnTextChanged(this, &MazeBuilderInspector::OnCurrentStyleChanged)
 				]
 			]
-		];
+		]
+		+ SVerticalBox::Slot()
+		.AutoHeight()
+		.HAlign(HAlign_Fill)
+		.VAlign(VAlign_Top)
+		.Padding(5, 0)
+		[
+			SNew(SHorizontalBox)
+			+ SHorizontalBox::Slot()
+			.MaxWidth(300.f)
+			.HAlign(HAlign_Fill)
+			.VAlign(VAlign_Center)
+			[
+				SNew(SHorizontalBox)
+				+ SHorizontalBox::Slot()
+				.MaxWidth(100.f)
+				.Padding(StandardLeftPadding)
+				.HAlign(HAlign_Fill)
+				.VAlign(VAlign_Center)
+				[
+					SNew(STextBlock)
+					.Text(LOCTEXT("PaintStroke", "格子绘制: "))
+				]
+			+ SHorizontalBox::Slot()
+			//.FillWidth(2.0f)
+			.MaxWidth(200.f)
+			.Padding(StandardRightPadding)
+			.HAlign(HAlign_Fill)
+			.VAlign(VAlign_Center)
+			[
+				CreatePaintTypeButton(EPaintType::PaintStroke)
+			]
+			+ SHorizontalBox::Slot()
+			.MaxWidth(300.f)
+			.HAlign(HAlign_Fill)
+			.VAlign(VAlign_Center)
+			[
+				SNew(SHorizontalBox)
+				+ SHorizontalBox::Slot()
+				.MaxWidth(100.f)
+				.Padding(StandardLeftPadding)
+				.HAlign(HAlign_Fill)
+				.VAlign(VAlign_Center)
+				[
+					SNew(STextBlock)
+					.Text(LOCTEXT("PaintPath", "路径绘制: "))
+				]
+				+ SHorizontalBox::Slot()
+				//.FillWidth(2.0f)
+				.MaxWidth(200.f)
+				.Padding(StandardRightPadding)
+				.HAlign(HAlign_Fill)
+				.VAlign(VAlign_Center)
+				[
+					CreatePaintTypeButton(EPaintType::PaintPath)
+				]
+			]
+		]
+	];
 }
 
 FReply MazeBuilderInspector::OnInitMazeBuilderBtnClick()
@@ -292,6 +350,58 @@ FReply MazeBuilderInspector::OnInitMazeBuilderBtnClick()
 	return FReply::Handled();
 }
 
+TSharedRef<SWidget> MazeBuilderInspector::CreatePaintTypeButton(EPaintType paintType)
+{
+	return SNew(SCheckBox)
+		.Style(FCoreStyle::Get(), "RadioButton")
+		.IsChecked(this, &MazeBuilderInspector::PaintTypeIsChecked, paintType)
+		.OnCheckStateChanged(this, &MazeBuilderInspector::OnPaintTypeChanged, paintType);
+}
+
+// Callback for determining whether a radio button is checked.
+ECheckBoxState MazeBuilderInspector::PaintTypeIsChecked(EPaintType paintType) const
+{
+	return (FMazeBuilderLogic::paintType == paintType)
+		? ECheckBoxState::Checked
+		: ECheckBoxState::Unchecked;
+}
+// Callback for checking a radio button.
+void MazeBuilderInspector::OnPaintTypeChanged(ECheckBoxState NewRadioState, EPaintType paintType)
+{
+	if (NewRadioState == ECheckBoxState::Checked)
+	{
+		FMazeBuilderLogic::paintType = paintType;
+	}
+}
+
+/*
+FSlateColor MazeBuilderInspector::GetPaintStrokeStateColor()
+{
+	//return FCoreStyle::Get().GetSlateColor("InvertedForeground");
+	if (FMazeBuilderLogic::bPaintStroke) return FSlateColor::UseForeground();
+	else return FSlateColor::UseSubduedForeground();
+}
+
+FSlateColor MazeBuilderInspector::GetPaintPathStateColor()
+{
+	if (FMazeBuilderLogic::bPaintPath) return FSlateColor::UseForeground();
+	else return FSlateColor::UseSubduedForeground();
+}
+
+FReply MazeBuilderInspector::OnPaintStrokeBtnClick()
+{
+	FMazeBuilderLogic::bPaintStroke = !FMazeBuilderLogic::bPaintStroke;
+	FMazeBuilderLogic::bPaintPath = false;
+	return FReply::Handled();
+}
+
+FReply MazeBuilderInspector::OnPaintPathBtnClick()
+{
+	FMazeBuilderLogic::bPaintPath = !FMazeBuilderLogic::bPaintPath;
+	FMazeBuilderLogic::bPaintStroke = false;
+	return FReply::Handled();
+}
+*/
 #undef LOCTEXT_NAMESPACE
 
 TOptional<int32> MazeBuilderInspector::GetCurrentGridWidth() const

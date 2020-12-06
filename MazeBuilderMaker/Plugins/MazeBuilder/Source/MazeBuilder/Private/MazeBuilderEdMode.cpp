@@ -146,7 +146,14 @@ bool FMazeBuilderEdMode::InputKey(FEditorViewportClient* ViewportClient, FViewpo
 					if (stroke)
 					{
 						UE_LOG(LogTemp, Warning, TEXT("Mouse Left Button Clicked!Paint stroke"));
-						FMazeBuilderLogic::Paint(stroke);
+						if (FMazeBuilderLogic::paintType == EPaintType::PaintStroke)
+						{
+							FMazeBuilderLogic::Paint(stroke);
+						}
+						else if (FMazeBuilderLogic::paintType == EPaintType::PaintPath)
+						{
+							FMazeBuilderLogic::DrawPath(stroke->GetActorLocation());
+						}
 					}
 				}
 			}
@@ -207,7 +214,14 @@ void FMazeBuilderEdMode::Tick(FEditorViewportClient * ViewportClient, float Delt
 			if (stroke)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("HoverActor Exist!Paint stroke"));
-				FMazeBuilderLogic::Paint(stroke);
+				if (FMazeBuilderLogic::paintType == EPaintType::PaintStroke)
+				{
+					FMazeBuilderLogic::Paint(stroke);
+				}
+				else if (FMazeBuilderLogic::paintType == EPaintType::PaintPath)
+				{
+					FMazeBuilderLogic::DrawPath(stroke->GetActorLocation());
+				}
 			}
 		}
 		else

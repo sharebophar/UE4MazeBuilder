@@ -45,5 +45,12 @@ public:
 	~MazeBuilderInspector();
 	TSharedRef<SWidget> InitInspector();
 	FReply OnInitMazeBuilderBtnClick();
+	TSharedRef<SWidget> CreatePaintTypeButton(EPaintType paintType);
+	// Callback for determining whether a radio button is checked.
+	ECheckBoxState PaintTypeIsChecked(EPaintType paintType) const;
+	// Callback for checking a radio button.
+	void OnPaintTypeChanged(ECheckBoxState NewRadioState, EPaintType paintType);
+	FColor CheckColor = FColor::Yellow;
+	FColor UnCheckColor = FColor::Cyan;
 	//TSharedPtr<FMazeBuilderLogic> logic;
 };

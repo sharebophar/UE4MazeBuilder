@@ -680,6 +680,7 @@ float FMazeBuilderLogic::GetGizmoHeight(FVector thePoint)
 }
 
 bool FMazeBuilderLogic::startPaint = false;
+EPaintType FMazeBuilderLogic::paintType = EPaintType::PaintNone;
 FVector FMazeBuilderLogic::curPoint = FVector::ZeroVector;
 int FMazeBuilderLogic::startLevel = 0;
 int FMazeBuilderLogic::gridWidth = 25;

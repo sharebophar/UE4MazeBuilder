@@ -13,9 +13,18 @@
 #include "MazeBuilderStrokeInfo.h"
 #include "AssetRegistryModule.h"
 #include "Kismet2/KismetEditorUtilities.h"
-/**
- *
- */
+
+enum EPaintType
+{
+	PaintNone,
+	PaintStroke,
+	PaintPath,
+	PaintHole,
+	PaintFence,
+	PaintWater,
+	PaintStyle,
+	PaintMaxValue,
+};
 class MAZEBUILDER_API FMazeBuilderLogic : public TSharedFromThis<FMazeBuilderLogic>
 {
 private:
@@ -40,6 +49,7 @@ public:
 	static bool startPaint;
 	static int startLevel;
 	static FVector curPoint;
+	static EPaintType paintType;
 public:
 	void static InitMazeBuilder();
 	static UClass* LoadBrushClass(FString pattern);
