@@ -25,11 +25,15 @@ TSharedRef<SWidget> MazeBuilderInspector::InitInspector()
 	FMazeBuilderLogic::levelHeight = 50;
 	FMazeBuilderLogic::style = 0;
 	*/
-	FMargin StandardPadding(6.f, 3.f);
-	FMargin StandardLeftPadding(6.f, 3.f, 3.f, 3.f);
-	FMargin StandardRightPadding(3.f, 3.f, 6.f, 3.f);
 	//controlRemember = TSharedPtr<ToolkitControlRemember>(new ToolkitControlRemember());
 	return  SNew(SVerticalBox)
+		+ SVerticalBox::Slot()
+		.AutoHeight()
+		.HAlign(HAlign_Center)
+		.Padding(5)
+		[
+			CreatePathSelectorUI(FMazeBuilderLogic::BrushTemplatePath)
+		]
 		+ SVerticalBox::Slot()
 		.AutoHeight()
 		.HAlign(HAlign_Center)
@@ -280,16 +284,25 @@ TSharedRef<SWidget> MazeBuilderInspector::InitInspector()
 					SNew(STextBlock)
 					.Text(LOCTEXT("PaintStroke", "格子绘制: "))
 				]
-			+ SHorizontalBox::Slot()
-			//.FillWidth(2.0f)
-			.MaxWidth(200.f)
-			.Padding(StandardRightPadding)
-			.HAlign(HAlign_Fill)
-			.VAlign(VAlign_Center)
-			[
-				CreatePaintTypeButton(EPaintType::PaintStroke)
+				+ SHorizontalBox::Slot()
+				//.FillWidth(2.0f)
+				.MaxWidth(40.f)
+				.Padding(StandardRightPadding)
+				.HAlign(HAlign_Left)
+				.VAlign(VAlign_Center)
+				[
+					CreatePaintTypeButton(EPaintType::PaintStroke)
+				]
 			]
-			+ SHorizontalBox::Slot()
+		]
+		+ SVerticalBox::Slot()
+		.AutoHeight()
+		.HAlign(HAlign_Fill)
+		.VAlign(VAlign_Top)
+		.Padding(5, 0)
+		[
+			SNew(SHorizontalBox)
+			+SHorizontalBox::Slot()
 			.MaxWidth(300.f)
 			.HAlign(HAlign_Fill)
 			.VAlign(VAlign_Center)
@@ -306,16 +319,15 @@ TSharedRef<SWidget> MazeBuilderInspector::InitInspector()
 				]
 				+ SHorizontalBox::Slot()
 				//.FillWidth(2.0f)
-				.MaxWidth(200.f)
+				.MaxWidth(40.0f)
 				.Padding(StandardRightPadding)
-				.HAlign(HAlign_Fill)
+				.HAlign(HAlign_Left)
 				.VAlign(VAlign_Center)
 				[
 					CreatePaintTypeButton(EPaintType::PaintPath)
 				]
 			]
-		]
-	];
+		];
 }
 
 FReply MazeBuilderInspector::OnInitMazeBuilderBtnClick()
@@ -350,12 +362,45 @@ FReply MazeBuilderInspector::OnInitMazeBuilderBtnClick()
 	return FReply::Handled();
 }
 
+FReply MazeBuilderInspector::OnSelectPathBtnClicked()
+{
+	
+	return FReply::Handled();
+}
+
 TSharedRef<SWidget> MazeBuilderInspector::CreatePaintTypeButton(EPaintType paintType)
 {
 	return SNew(SCheckBox)
 		.Style(FCoreStyle::Get(), "RadioButton")
 		.IsChecked(this, &MazeBuilderInspector::PaintTypeIsChecked, paintType)
 		.OnCheckStateChanged(this, &MazeBuilderInspector::OnPaintTypeChanged, paintType);
+}
+
+TSharedRef<SWidget> MazeBuilderInspector::CreatePathSelectorUI(FString defaultPath)
+{
+	return 	SNew(SHorizontalBox)
+		+ SHorizontalBox::Slot()
+		.MaxWidth(800.f)
+		.Padding(StandardLeftPadding)
+		.HAlign(HAlign_Left)
+		.VAlign(VAlign_Center)
+		[
+			SNew(SEditableTextBox)
+			.Text(FText::FromString(defaultPath))
+			.OnTextChanged(this,&MazeBuilderInspector::OnBrushPathChanged)
+		]
+		+ SHorizontalBox::Slot()
+		//.FillWidth(2.0f)
+		.MaxWidth(50.0f)
+		.Padding(StandardRightPadding)
+		.HAlign(HAlign_Left)
+		.VAlign(VAlign_Center)
+		[
+			SNew(SButton)
+			.Text(LOCTEXT("SelectPath","..."))
+			.OnClicked(this,&MazeBuilderInspector::OnSelectPathBtnClicked)
+		];
+		
 }
 
 // Callback for determining whether a radio button is checked.
@@ -374,34 +419,6 @@ void MazeBuilderInspector::OnPaintTypeChanged(ECheckBoxState NewRadioState, EPai
 	}
 }
 
-/*
-FSlateColor MazeBuilderInspector::GetPaintStrokeStateColor()
-{
-	//return FCoreStyle::Get().GetSlateColor("InvertedForeground");
-	if (FMazeBuilderLogic::bPaintStroke) return FSlateColor::UseForeground();
-	else return FSlateColor::UseSubduedForeground();
-}
-
-FSlateColor MazeBuilderInspector::GetPaintPathStateColor()
-{
-	if (FMazeBuilderLogic::bPaintPath) return FSlateColor::UseForeground();
-	else return FSlateColor::UseSubduedForeground();
-}
-
-FReply MazeBuilderInspector::OnPaintStrokeBtnClick()
-{
-	FMazeBuilderLogic::bPaintStroke = !FMazeBuilderLogic::bPaintStroke;
-	FMazeBuilderLogic::bPaintPath = false;
-	return FReply::Handled();
-}
-
-FReply MazeBuilderInspector::OnPaintPathBtnClick()
-{
-	FMazeBuilderLogic::bPaintPath = !FMazeBuilderLogic::bPaintPath;
-	FMazeBuilderLogic::bPaintStroke = false;
-	return FReply::Handled();
-}
-*/
 #undef LOCTEXT_NAMESPACE
 
 TOptional<int32> MazeBuilderInspector::GetCurrentGridWidth() const
@@ -462,6 +479,11 @@ FText MazeBuilderInspector::GetCurrentStyle() const
 void MazeBuilderInspector::OnCurrentStyleChanged(const FText & StyleValue)
 {
 	FMazeBuilderLogic::style = StyleValue.ToString();
+}
+
+void MazeBuilderInspector::OnBrushPathChanged(const FText &brushPath)
+{
+	FMazeBuilderLogic::BrushTemplatePath = brushPath.ToString();
 }
 
 

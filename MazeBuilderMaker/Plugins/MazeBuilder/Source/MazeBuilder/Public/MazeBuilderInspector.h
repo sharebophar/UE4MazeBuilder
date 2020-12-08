@@ -17,6 +17,9 @@
 class MAZEBUILDER_API MazeBuilderInspector : public TSharedFromThis<MazeBuilderInspector>
 {
 private:
+	FMargin StandardPadding = FMargin(6.f, 3.f);
+	FMargin StandardLeftPadding = FMargin(6.f, 3.f, 3.f, 3.f);
+	FMargin StandardRightPadding = FMargin(3.f, 3.f, 6.f, 3.f);
 	//int32 gridWidth;
 	TOptional<int32> GetCurrentGridWidth() const;
 	void OnCurrentGridWidthChanged(int32 GridWidthValue);
@@ -40,12 +43,16 @@ private:
 	//FString style;
 	FText GetCurrentStyle() const;
 	void OnCurrentStyleChanged(const FText &StyleValue);
+
+	void OnBrushPathChanged(const FText &brushPath);
 public:
 	MazeBuilderInspector();
 	~MazeBuilderInspector();
 	TSharedRef<SWidget> InitInspector();
 	FReply OnInitMazeBuilderBtnClick();
+	FReply OnSelectPathBtnClicked();
 	TSharedRef<SWidget> CreatePaintTypeButton(EPaintType paintType);
+	TSharedRef<SWidget> CreatePathSelectorUI(FString defaultPath);
 	// Callback for determining whether a radio button is checked.
 	ECheckBoxState PaintTypeIsChecked(EPaintType paintType) const;
 	// Callback for checking a radio button.

@@ -209,11 +209,11 @@ void FMazeBuilderEdMode::Tick(FEditorViewportClient * ViewportClient, float Delt
 		}
 		if (MouseState == EMouseState::LeftMouseDown)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Mouse Drag!"));
+			//UE_LOG(LogTemp, Warning, TEXT("Mouse Drag!"));
 			AMazeBuilderBrushTemplate* stroke = (AMazeBuilderBrushTemplate*)(HoveredActor.Get());
 			if (stroke)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("HoverActor Exist!Paint stroke"));
+				//UE_LOG(LogTemp, Warning, TEXT("HoverActor Exist!Paint stroke"));
 				if (FMazeBuilderLogic::paintType == EPaintType::PaintStroke)
 				{
 					FMazeBuilderLogic::Paint(stroke);
