@@ -50,6 +50,8 @@ public:
 	static int startLevel;
 	static FVector curPoint;
 	static EPaintType paintType;
+	static FVector gridPoint;
+	static FVector nextPoint;
 public:
 	void static InitMazeBuilder();
 	static UClass* LoadBrushClass(FString pattern);

@@ -7,6 +7,7 @@
 #include "EditorModeManager.h"
 #include "EngineUtils.h"
 #include "LevelEditorViewport.h"
+#include "Public/DrawDebugHelpers.h"
 
 const FEditorModeID FMazeBuilderEdMode::EM_MazeBuilderEdModeId = TEXT("EM_MazeBuilderEdMode");
 
@@ -233,6 +234,35 @@ void FMazeBuilderEdMode::Tick(FEditorViewportClient * ViewportClient, float Delt
 	{
 		BuildState = EBuildState::NotOverViewport;
 		HoveredActor.Reset();
+	}
+	// 绘制路径线
+	if (FMazeBuilderLogic::paintType == EPaintType::PaintPath)
+	{
+		TArray<FVector> pathPointList = FMazeBuilderLogic::GetPathPointList(FMazeBuilderLogic::curPoint);
+		FMazeBuilderLogic::gridPoint = pathPointList[0];
+		FMazeBuilderLogic::nextPoint = pathPointList[1];
+
+		DrawDebugLine(
+			GetWorld(),
+			pathPointList[0],
+			pathPointList[1],
+			FColor::Red,
+			false,
+			0.0f,
+			0.0f,
+			10.0f
+		);
+		// 测试起始点
+		DrawDebugLine(
+			GetWorld(),
+			pathPointList[0],
+			FVector::ZeroVector,
+			FColor::Red,
+			false,
+			0.0f,
+			0.0f,
+			10.0f
+		);
 	}
 }
 

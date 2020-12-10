@@ -511,9 +511,6 @@ TArray<FAssetData> FMazeBuilderLogic::GetAllBrushBPData()
 */
 void FMazeBuilderLogic::DrawPath(FVector point)
 {
-	TArray<FVector> pathPointList = GetPathPointList(point);
-	FVector gridPoint = pathPointList[0];
-	FVector nextPoint = pathPointList[1];
 	// 根据当前点与下个点的坐标判定路径方位，并写入对应地块中，暂时显示Gizmo路径线条，之后再考虑使用地块表现
 	FIntPoint grid_pos = InitPaintLevel(gridPoint);
 	TSharedPtr<FMazeBuilderStrokeInfo>  grid_stroke_info = mapData->GetStrokeInfoAt(grid_pos);
@@ -614,6 +611,7 @@ FString FMazeBuilderLogic::GetSourcePath(TSharedPtr<FMazeBuilderStrokeInfo> stro
 		}
 	}
 	FString sourcePath = FMazeBuilderUltility::IntToHex(result);
+	UE_LOG(LogTemp, Warning, TEXT("pathHexStr:%s pathBinStr:%s sourcePath:%s x:%d"), *pathHexStr, *pathBinStr, *sourcePath,x);
 	//Utility.DebugText("pathHexStr:" + pathHexStr + "\t pathBinStr:" + pathBinStr + "\t sourcePath is:" + sourcePath + "\t x:" + x.ToString());
 	return sourcePath;
 }
@@ -643,22 +641,22 @@ TArray<FVector> FMazeBuilderLogic::GetPathPointList(FVector thePoint)
 	if (angle > 135 || angle < -135)
 	{
 		// 向x正半轴延伸
-		nextPoint.X = nextPoint.X - gridSize;
+		nextPoint.X = nextPoint.X + gridSize;
 	}
 	else if (angle > 45 && angle < 135)
 	{
 		// 向z正半轴延伸
-		nextPoint.Y = nextPoint.Y - gridSize;
+		nextPoint.Y = nextPoint.Y + gridSize;
 	}
 	else if (angle > -45 && angle < 45)
 	{
 		// 向x负半轴延伸
-		nextPoint.X = nextPoint.X + gridSize;
+		nextPoint.X = nextPoint.X - gridSize;
 	}
 	else if (angle > -135 && angle < -45)
 	{
 		// 向z负半轴延伸
-		nextPoint.Y = nextPoint.Y + gridSize;
+		nextPoint.Y = nextPoint.Y - gridSize;
 	}
 
 	gridPoint.Z = GetGizmoHeight(gridPoint);
@@ -679,6 +677,8 @@ float FMazeBuilderLogic::GetGizmoHeight(FVector thePoint)
 	return level * levelHeight;
 }
 
+FVector FMazeBuilderLogic::gridPoint = FVector::ZeroVector;
+FVector FMazeBuilderLogic::nextPoint = FVector::ZeroVector;
 bool FMazeBuilderLogic::startPaint = false;
 EPaintType FMazeBuilderLogic::paintType = EPaintType::PaintStroke;
 FVector FMazeBuilderLogic::curPoint = FVector::ZeroVector;

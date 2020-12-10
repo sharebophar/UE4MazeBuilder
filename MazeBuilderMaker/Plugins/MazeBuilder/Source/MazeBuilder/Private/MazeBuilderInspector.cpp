@@ -391,13 +391,13 @@ TSharedRef<SWidget> MazeBuilderInspector::CreatePathSelectorUI(FString defaultPa
 		]
 		+ SHorizontalBox::Slot()
 		//.FillWidth(2.0f)
-		.MaxWidth(50.0f)
+		.MaxWidth(200.0f)
 		.Padding(StandardRightPadding)
 		.HAlign(HAlign_Left)
 		.VAlign(VAlign_Center)
 		[
 			SNew(SButton)
-			.Text(LOCTEXT("SelectPath","..."))
+			.Text(LOCTEXT("SelectPath","更新地图"))
 			.OnClicked(this,&MazeBuilderInspector::OnSelectPathBtnClicked)
 		];
 		
