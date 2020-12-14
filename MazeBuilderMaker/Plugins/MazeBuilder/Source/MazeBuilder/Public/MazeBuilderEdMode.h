@@ -44,7 +44,7 @@ public:
 	virtual bool LostFocus(FEditorViewportClient* ViewportClient, FViewport* Viewport) override;
 	virtual bool InputKey(FEditorViewportClient* ViewportClient, FViewport* Viewport, FKey Key, EInputEvent Event) override;
 	virtual void Tick(FEditorViewportClient* ViewportClient, float DeltaTime) override;
-	//virtual void Render(const FSceneView* View, FViewport* Viewport, FPrimitiveDrawInterface* PDI) override;
+	virtual void Render(const FSceneView* View, FViewport* Viewport, FPrimitiveDrawInterface* PDI) override;
 	//virtual void ActorSelectionChangeNotify() override;
 	bool UsesToolkits() const override;
 	//TSharedPtr<MazeBuilderInspector> inspector;

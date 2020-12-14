@@ -576,7 +576,6 @@ void FMazeBuilderLogic::ReplacePathStroke(TSharedPtr<FMazeBuilderStrokeInfo> str
 	//GameObject stroke = GameObject.Instantiate(child.gameObject);
 	//Undo.RegisterCreatedObjectUndo(stroke, "Replace Path stroke");
 	UE_LOG(LogTemp, Warning, TEXT("path is:%s"), *(stroke_info->path->ToString()));
-	//Utility.DebugText(stroke_info->path->ToString());
 	FString realName = FMazeBuilderUltility::GetStrokeCode(stroke_info->obj->name); 
 	stroke->name = realName + "_" + stroke_info->path->ToString(); //衍生模板码，但style是多少已经无所谓了，不处理了
 
@@ -625,7 +624,7 @@ TArray<FVector> FMazeBuilderLogic::GetPathPointList(FVector thePoint)
 {
 	FVector gridPoint = FVector(FMazeBuilderUltility::FormatPos(thePoint, gridSize)*gridSize);
 	gridPoint.X = gridPoint.X + 0.5f * gridSize;
-	gridPoint.Y = gridPoint.Y - 0.5f * gridSize;
+	gridPoint.Y = gridPoint.Y + 0.5f * gridSize;
 	gridPoint.Z = 0;
 	curPoint.Z = 0;
 	//DrawStrokeRect(gridPoint, 0.1f, gridPoint.y);
