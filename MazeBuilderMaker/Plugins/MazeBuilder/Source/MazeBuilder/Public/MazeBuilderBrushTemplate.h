@@ -75,6 +75,8 @@ class MAZEBUILDER_API AMazeBuilderBrushTemplate : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AMazeBuilderBrushTemplate();
+	UPROPERTY(VisibleAnyWhere)
+	UStaticMeshComponent* StaticMesh;
 	UPROPERTY(EditInstanceOnly)
 	float gridSize = 100.0f;
 	UPROPERTY(EditInstanceOnly)
