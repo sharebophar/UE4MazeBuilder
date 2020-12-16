@@ -597,6 +597,7 @@ void FMazeBuilderLogic::ReplacePathStroke(TSharedPtr<FMazeBuilderStrokeInfo> str
 FString FMazeBuilderLogic::GetSourcePath(TSharedPtr<FMazeBuilderStrokeInfo> stroke_info)
 {
 	//当前笔刷为pow(2,n)时，顺时针旋转x个90度后的path值为pow(2,(n-x)%4),这里就是根据path求n(n%4)
+	//UE4就应该改为逆时针旋转x个90度
 	int x = stroke_info->trans_type;
 	FString pathHexStr = stroke_info->path->ToString();
 	FString pathBinStr = FMazeBuilderUltility::HexToBin(pathHexStr[0]);
@@ -620,9 +621,9 @@ FString FMazeBuilderLogic::GetSourcePath(TSharedPtr<FMazeBuilderStrokeInfo> stro
 * @thePoint
 *
 */
-TArray<FVector> FMazeBuilderLogic::GetPathPointList(FVector thePoint)
+void FMazeBuilderLogic::GetPathPointList(FVector thePoint)
 {
-	FVector gridPoint = FVector(FMazeBuilderUltility::FormatPos(thePoint, gridSize)*gridSize);
+	gridPoint = FVector(FMazeBuilderUltility::FormatPos(thePoint, gridSize)*gridSize);
 	gridPoint.X = gridPoint.X + 0.5f * gridSize;
 	gridPoint.Y = gridPoint.Y + 0.5f * gridSize;
 	gridPoint.Z = 0;
@@ -632,11 +633,12 @@ TArray<FVector> FMazeBuilderLogic::GetPathPointList(FVector thePoint)
 	FVector v1 = FVector(1.0f,0.0f,0.0f);
 	FVector v2 = gridPoint - curPoint;
 	float angle = FMath::Acos(v2.CosineAngle2D(v1));
+	angle = angle * 180.0f / PI;
 	//float angle = Vector3.Angle(v1, v2);
 	//angle *= Mathf.Sign(Vector3.Cross(v1, v2).y);
 	angle *= FMath::Sign(FVector::CrossProduct(v1, v2).Z);
 	//float angle = Vector3.SignedAngle(Vector3.right,gridPoint-curPoint,Vector3.up);
-	FVector nextPoint = FVector(gridPoint.X, gridPoint.Y, gridPoint.Z);
+	nextPoint = FVector(gridPoint.X, gridPoint.Y, gridPoint.Z);
 	if (angle > 135 || angle < -135)
 	{
 		// 向x正半轴延伸
@@ -645,7 +647,7 @@ TArray<FVector> FMazeBuilderLogic::GetPathPointList(FVector thePoint)
 	else if (angle > 45 && angle < 135)
 	{
 		// 向z正半轴延伸
-		nextPoint.Y = nextPoint.Y + gridSize;
+		nextPoint.Y = nextPoint.Y - gridSize;
 	}
 	else if (angle > -45 && angle < 45)
 	{
@@ -655,15 +657,15 @@ TArray<FVector> FMazeBuilderLogic::GetPathPointList(FVector thePoint)
 	else if (angle > -135 && angle < -45)
 	{
 		// 向z负半轴延伸
-		nextPoint.Y = nextPoint.Y - gridSize;
+		nextPoint.Y = nextPoint.Y + gridSize;
 	}
 
 	gridPoint.Z = GetGizmoHeight(gridPoint);
 	nextPoint.Z = GetGizmoHeight(nextPoint);
-	TArray<FVector> pointList;
-	pointList.Add(gridPoint);
-	pointList.Add(nextPoint);
-	return pointList;
+	//TArray<FVector> pointList;
+	//pointList.Add(gridPoint);
+	//pointList.Add(nextPoint);
+	//return pointList;
 }
 
 float FMazeBuilderLogic::GetGizmoHeight(FVector thePoint)

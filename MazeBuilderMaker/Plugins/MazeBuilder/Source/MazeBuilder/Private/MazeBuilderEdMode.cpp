@@ -223,7 +223,7 @@ void FMazeBuilderEdMode::Render(const FSceneView * View, FViewport * Viewport, F
 					//FHitResult HitResult;
 					TArray<FHitResult> outHits;
 					FCollisionObjectQueryParams collisionObjectQueryParams;
-					collisionObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_EngineTraceChannel2);
+					collisionObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldDynamic);
 					bool canHit = GetWorld()->LineTraceMultiByObjectType(outHits, start, end, collisionObjectQueryParams);
 					//bool canHit = GetWorld()->LineTraceSingleByChannel(HitResult, start, end, ECollisionChannel::ECC_EngineTraceChannel2, FCollisionQueryParams::DefaultQueryParam);
 					if (canHit && outHits.Num() > 0)
@@ -233,7 +233,7 @@ void FMazeBuilderEdMode::Render(const FSceneView * View, FViewport * Viewport, F
 							FHitResult HitResult = outHits[i];
 							//PDI->DrawPoint(HitResult.Location, FLinearColor::White, 10.0, 1);
 							FMazeBuilderLogic::curPoint = HitResult.Location;
-							UE_LOG(LogTemp, Warning, TEXT("hitLocation is: %s"), * HitResult.Location.ToString());
+							//UE_LOG(LogTemp, Warning, TEXT("hitLocation is: %s"), * HitResult.Location.ToString());
 							return;
 						}
 					}
@@ -298,14 +298,12 @@ void FMazeBuilderEdMode::Tick(FEditorViewportClient * ViewportClient, float Delt
 	// 绘制路径线
 	if (FMazeBuilderLogic::paintType == EPaintType::PaintPath)
 	{
-		TArray<FVector> pathPointList = FMazeBuilderLogic::GetPathPointList(FMazeBuilderLogic::curPoint);
-		FMazeBuilderLogic::gridPoint = pathPointList[0];
-		FMazeBuilderLogic::nextPoint = pathPointList[1];
+		FMazeBuilderLogic::GetPathPointList(FMazeBuilderLogic::curPoint);
 
 		DrawDebugLine(
 			GetWorld(),
-			pathPointList[0],
-			pathPointList[1],
+			FMazeBuilderLogic::gridPoint,
+			FMazeBuilderLogic::nextPoint,
 			FColor::Red,
 			false,
 			0.0f,
@@ -315,7 +313,7 @@ void FMazeBuilderEdMode::Tick(FEditorViewportClient * ViewportClient, float Delt
 		// 测试起始点
 		DrawDebugLine(
 			GetWorld(),
-			pathPointList[0],
+			FMazeBuilderLogic::gridPoint,
 			FVector::ZeroVector,
 			FColor::Red,
 			false,

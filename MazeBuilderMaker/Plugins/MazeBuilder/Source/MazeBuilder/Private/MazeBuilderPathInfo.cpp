@@ -12,6 +12,7 @@ FMazeBuilderPathInfo::~FMazeBuilderPathInfo()
 {
 }
 
+// -y,x,y,-x
 FString FMazeBuilderPathInfo::ToString()
 {
 	FString binCode = FString(top ? "1" : "0") + FString(right ? "1" : "0")+ FString(bottom ? "1" : "0")+ FString(left ? "1" : "0");

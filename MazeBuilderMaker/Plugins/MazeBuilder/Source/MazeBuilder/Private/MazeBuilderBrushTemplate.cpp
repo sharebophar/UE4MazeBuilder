@@ -15,8 +15,8 @@ AMazeBuilderBrushTemplate::AMazeBuilderBrushTemplate()
 	Tags = { "MazeBuilderStroke" };
 	ColorArr.Add(FColor::White);
 	ColorArr.Add(FColor::Green);
-	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
-	StaticMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_EngineTraceChannel2,ECollisionResponse::ECR_Block);
+	//StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StrokeMesh"));
+	//StaticMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_EngineTraceChannel2,ECollisionResponse::ECR_Block);
 	//Material = CreateEditorOnlyDefaultSubobject<UMaterialInterface>("recorderMaterial");
 	/*
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> RecorderMaterialAsset(TEXT("Material'/Game/Material/VertexColorMat'"));

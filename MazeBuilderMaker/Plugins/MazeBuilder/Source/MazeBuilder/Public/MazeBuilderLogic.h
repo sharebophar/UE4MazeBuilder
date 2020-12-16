@@ -70,7 +70,7 @@ public:
 	static FIntPoint InitPaintLevel(FVector point);
 	static void Paint(AMazeBuilderBrushTemplate* stroke);
 	//
-	static TArray<FVector> GetPathPointList(FVector thePoint);
+	static void GetPathPointList(FVector thePoint);
 	static float GetGizmoHeight(FVector thePoint);
 	static void ReplacePathStroke(TSharedPtr<FMazeBuilderStrokeInfo> stroke_info);
 	static FString GetSourcePath(TSharedPtr<FMazeBuilderStrokeInfo> stroke_info);
