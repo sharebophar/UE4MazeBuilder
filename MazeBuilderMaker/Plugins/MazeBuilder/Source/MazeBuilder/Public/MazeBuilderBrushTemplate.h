@@ -85,6 +85,7 @@ public:
 	float levelHeight = 50.0f;
 	//在场景中生成的对象时，用该name记录stroke的衍生模板名字,调试时临时打开
 	UPROPERTY(EditInstanceOnly)
+	// 衍生模板
 	FString name = "";
 	UPROPERTY(EditAnywhere)
 	bool bShowProceduralMesh = true;

@@ -21,7 +21,7 @@ private:
 public:
 	~FMazeBuilderStrokeInfo();
 	FMazeBuilderStrokeInfo(FString p, int i, int l);
-	//原始模板名称
+	//原生模板名称
 	FString name;
 	int trans_type;
 	int level;

@@ -532,13 +532,13 @@ void FMazeBuilderLogic::DrawPath(FVector point)
 
 	if (nextPoint.X < gridPoint.X)
 	{
-		grid_stroke_info->path->right = true;
-		next_stroke_info->path->left = true;
+		grid_stroke_info->path->left = true;
+		next_stroke_info->path->right = true;
 	}
 	else if (nextPoint.X > gridPoint.X)
 	{
-		grid_stroke_info->path->left = true;
-		next_stroke_info->path->right = true;
+		grid_stroke_info->path->right = true;
+		next_stroke_info->path->left = true;
 	}
 
 	if (nextPoint.Y < gridPoint.Y)
@@ -588,6 +588,7 @@ void FMazeBuilderLogic::ReplacePathStroke(TSharedPtr<FMazeBuilderStrokeInfo> str
 		stroke->UpdateMesh();
 	}
 	stroke->SetActorLocation(stroke_info->obj->GetActorLocation());
+	stroke->SetActorRotation(FQuat::MakeFromEuler(FVector(0, 0, stroke_info->trans_type*90.0f)));
 	world->EditorDestroyActor(stroke_info->obj,true);
 	stroke_info->obj = stroke;
 	//Undo.undoRedoPerformed += UndoReplacePathStroke;
@@ -693,6 +694,6 @@ FString FMazeBuilderLogic::style = "T";
 TSharedPtr<FMazeBuilderMapData> FMazeBuilderLogic::mapData = MakeShareable(new FMazeBuilderMapData());
 TArray<FIntVector> FMazeBuilderLogic::BasicBrush = FMazeBuilderLogic::GetBasicBrush();
 TArray<Vector4> FMazeBuilderLogic::SrcTable = FMazeBuilderLogic::GetSrcTable();
-FString FMazeBuilderLogic::BrushTemplatePath = "/Game/BrushTemplate";
+FString FMazeBuilderLogic::BrushTemplatePath = "/Game/MeshBrushTemplate1";
 UWorld* FMazeBuilderLogic::world = nullptr;
 PRAGMA_ENABLE_OPTIMIZATION

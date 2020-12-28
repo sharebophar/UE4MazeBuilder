@@ -311,6 +311,7 @@ void FMazeBuilderEdMode::Tick(FEditorViewportClient * ViewportClient, float Delt
 			10.0f
 		);
 		// ≤‚ ‘∆ ºµ„
+		/*
 		DrawDebugLine(
 			GetWorld(),
 			FMazeBuilderLogic::gridPoint,
@@ -321,6 +322,7 @@ void FMazeBuilderEdMode::Tick(FEditorViewportClient * ViewportClient, float Delt
 			0.0f,
 			10.0f
 		);
+		*/
 	}
 }
 
