@@ -41,15 +41,17 @@ void FMazeBuilderLogic::InitMazeBuilder()
 				//mapData->strokeTable->Insert(stroke_info,0);
 				mapData->AddStrokeInfo(FIntPoint(i, j), stroke_info);
 				//mapData->strokeTable->Add(stroke_info);
-				mapData->max_col = FMath::Max<int>(j, mapData->max_col);
-				mapData->max_row = FMath::Max<int>(i, mapData->max_row);
-				mapData->min_col = mapData->min_col == 0 ? j : FMath::Min<int>(mapData->min_col, j);
-				mapData->min_row = mapData->min_row == 0 ? i : FMath::Min<int>(mapData->min_row, i);
+				//mapData->max_col = FMath::Max<int>(j, mapData->max_col);
+				//mapData->max_row = FMath::Max<int>(i, mapData->max_row);
+				//mapData->min_col = mapData->min_col == 0 ? j : FMath::Min<int>(mapData->min_col, j);
+				//mapData->min_row = mapData->min_row == 0 ? i : FMath::Min<int>(mapData->min_row, i);
 				//mapData->strokeTable->Add(stroke_info);
 			}
 		}
 		//TArray<FAssetData> clses = FMazeBuilderLogic::GetAllBrushBPData();
 	}
+	mapData->max_row = gridLength;
+	mapData->max_col = gridWidth;
 }
 
 //获得level层的码,就是返回倒数第level个码

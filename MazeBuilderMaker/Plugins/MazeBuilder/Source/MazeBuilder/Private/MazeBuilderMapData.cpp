@@ -35,7 +35,7 @@ void FMazeBuilderMapData::Clear()
 */
 TSharedPtr<FMazeBuilderStrokeInfo> FMazeBuilderMapData::GetStrokeInfoAt(FIntPoint pos)
 {
-	if(pos.X>=0&&pos.Y>=0) return strokeMap[pos];
+	if(pos.X>=0&&pos.Y>=0&&pos.X<max_col&&pos.Y<max_row) return strokeMap[pos];
 	return NULL;
 }
 
