@@ -1073,15 +1073,15 @@ void AMazeBuilderBrushTemplate::CollectCompleteMeshData(FString szPattern)
 	}
 }
 
-template<typename Vector4,typename ... Args> 
-void AMazeBuilderBrushTemplate::CollVertData(Vector4 vec,Args ... args)
+template<typename FCollectCode,typename ... Args> 
+void AMazeBuilderBrushTemplate::CollVertData(FCollectCode vec,Args ... args)
 {
 	CollVertData(vec);
 	CollVertData(args...); // 递归调用
 }
 
-template<typename Vector4>
-void AMazeBuilderBrushTemplate::CollVertData(Vector4 vec)
+template<typename FCollectCode>
+void AMazeBuilderBrushTemplate::CollVertData(FCollectCode vec)
 {
 	vertList.Insert(vec.ToVector(),0);
 	//normalList.Add_normal);
@@ -1091,19 +1091,19 @@ void AMazeBuilderBrushTemplate::CollVertData(Vector4 vec)
 	triList.Add(gTriIndex++);
 }
 
-Vector4 AMazeBuilderBrushTemplate::Lv(Vector4 point, int level, int ColorIndex)
+FCollectCode AMazeBuilderBrushTemplate::Lv(FCollectCode point, int level, int ColorIndex)
 {
-	return point + Vector4(0, 0, level * levelHeight, ColorIndex);
+	return point + FCollectCode(0, 0, level * levelHeight, ColorIndex);
 }
 
-Vector4 AMazeBuilderBrushTemplate::Mh3(Vector4 point)
+FCollectCode AMazeBuilderBrushTemplate::Mh3(FCollectCode point)
 {
-	return point + Vector4(0, 0, -(1 - cornerSize / gridSize) * levelHeight, 0);
+	return point + FCollectCode(0, 0, -(1 - cornerSize / gridSize) * levelHeight, 0);
 }
 
-Vector4 AMazeBuilderBrushTemplate::Mh7(Vector4 point)
+FCollectCode AMazeBuilderBrushTemplate::Mh7(FCollectCode point)
 {
-	return point + Vector4(0, 0, -(1 - (2 * cornerSize / gridSize)) * levelHeight,0);
+	return point + FCollectCode(0, 0, -(1 - (2 * cornerSize / gridSize)) * levelHeight,0);
 }
 
 void AMazeBuilderBrushTemplate::InitPoints()
@@ -1111,33 +1111,33 @@ void AMazeBuilderBrushTemplate::InitPoints()
 	/*Unity是右手坐标系，Max也是右手坐标系，Unreal是左手坐标系*/
 	// 切换 x = x,y = -z,z = y
 	// 为了保障Unreal和Max中的表现一致，调整坐标x=-x,y=-y
-	LU = Vector4(-gridSize / 2, -gridSize / 2, 0);
-	LD = Vector4(-gridSize / 2, gridSize / 2, 0);
-	RU = Vector4(gridSize / 2, -gridSize / 2, 0);
-	RD = Vector4(gridSize / 2, gridSize / 2, 0);
+	LU = FCollectCode(-gridSize / 2, -gridSize / 2, 0);
+	LD = FCollectCode(-gridSize / 2, gridSize / 2, 0);
+	RU = FCollectCode(gridSize / 2, -gridSize / 2, 0);
+	RD = FCollectCode(gridSize / 2, gridSize / 2, 0);
 
-	LIU = LU + Vector4(cornerSize, 0, 0);
-	RIU = RU - Vector4(cornerSize, 0, 0);
-	LID = LD + Vector4(cornerSize, 0, 0);
-	RID = RD - Vector4(cornerSize, 0, 0);
+	LIU = LU + FCollectCode(cornerSize, 0, 0);
+	RIU = RU - FCollectCode(cornerSize, 0, 0);
+	LID = LD + FCollectCode(cornerSize, 0, 0);
+	RID = RD - FCollectCode(cornerSize, 0, 0);
 
-	LUI = LU + Vector4(0, cornerSize, 0);
-	LDI = LD - Vector4(0, cornerSize, 0);
-	RUI = RU + Vector4(0, cornerSize, 0);
-	RDI = RD - Vector4(0, cornerSize, 0);
+	LUI = LU + FCollectCode(0, cornerSize, 0);
+	LDI = LD - FCollectCode(0, cornerSize, 0);
+	RUI = RU + FCollectCode(0, cornerSize, 0);
+	RDI = RD - FCollectCode(0, cornerSize, 0);
 
-	LIUI = LU + Vector4(cornerSize, cornerSize,0);
-	RIUI = RU + Vector4(-cornerSize, cornerSize,0);
-	LIDI = LD + Vector4(cornerSize, -cornerSize,0);
-	RIDI = RD + Vector4(-cornerSize, -cornerSize,0);
+	LIUI = LU + FCollectCode(cornerSize, cornerSize,0);
+	RIUI = RU + FCollectCode(-cornerSize, cornerSize,0);
+	LIDI = LD + FCollectCode(cornerSize, -cornerSize,0);
+	RIDI = RD + FCollectCode(-cornerSize, -cornerSize,0);
 
-	CTR = Vector4();
+	CTR = FCollectCode();
 
-	RI2DI2 = CTR + Vector4(0.5f * cornerSize, 0.5f * cornerSize, 0, 0);
-	LI2DI2 = CTR + Vector4(-0.5f * cornerSize, 0.5f * cornerSize,0, 0);
-	RI2UI2 = CTR - Vector4(-0.5f * cornerSize, 0.5f * cornerSize,0, 0);
-	LI2DI = LIDI - Vector4(-cornerSize, 0, 0, 0);
-	RIUI2 = RIU + Vector4(0, 2 * cornerSize, 0,0);
+	RI2DI2 = CTR + FCollectCode(0.5f * cornerSize, 0.5f * cornerSize, 0, 0);
+	LI2DI2 = CTR + FCollectCode(-0.5f * cornerSize, 0.5f * cornerSize,0, 0);
+	RI2UI2 = CTR - FCollectCode(-0.5f * cornerSize, 0.5f * cornerSize,0, 0);
+	LI2DI = LIDI - FCollectCode(-cornerSize, 0, 0, 0);
+	RIUI2 = RIU + FCollectCode(0, 2 * cornerSize, 0,0);
 
 	vertList.Empty();
 	colorList.Empty();

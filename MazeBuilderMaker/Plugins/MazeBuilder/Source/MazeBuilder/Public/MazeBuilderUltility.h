@@ -5,10 +5,8 @@
 #include "CoreMinimal.h"
 #include "Dialogs/Dialogs.h"
 #include "Editor.h"
-#include "Vector4.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Misc/FileHelper.h"
-#include "Paths.h"
 /**
  *
  */

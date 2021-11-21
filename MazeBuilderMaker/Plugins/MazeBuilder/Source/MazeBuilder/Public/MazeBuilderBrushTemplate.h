@@ -8,15 +8,17 @@
 #include "MazeBuilderUltility.h"
 #include "MazeBuilderBrushTemplate.generated.h"
 
-class Vector4
+USTRUCT()
+struct MAZEBUILDER_API FCollectCode
 {
+	GENERATED_BODY()
 public:
 	float x;
 	float y;
 	float z;
 	int w;
 
-	Vector4()
+	FCollectCode()
 	{
 		this->x = 0;
 		this->y = 0;
@@ -24,7 +26,7 @@ public:
 		this->w = 0;
 	}
 
-	Vector4(float x, float y, float z, int w = 0)
+	FCollectCode(float x, float y, float z, int w = 0)
 	{
 		this->x = x;
 		this->y = y;
@@ -32,9 +34,9 @@ public:
 		this->w = w;
 	}
 
-	Vector4 operator+(const Vector4& other)
+	FCollectCode operator+(const FCollectCode& other)
 	{
-		Vector4 v;
+		FCollectCode v;
 		v.x = this->x + other.x;
 		v.y = this->y + other.y;
 		v.z = this->z + other.z;
@@ -51,9 +53,9 @@ public:
 		else return 0;
 	}
 
-	Vector4 operator-(const Vector4& other)
+	FCollectCode operator-(const FCollectCode& other)
 	{
-		Vector4 v;
+		FCollectCode v;
 		v.x = this->x - other.x;
 		v.y = this->y - other.y;
 		v.z = this->z - other.z;
@@ -77,45 +79,46 @@ public:
 	AMazeBuilderBrushTemplate();
 	//UPROPERTY(VisibleAnyWhere)
 	//UStaticMeshComponent* StaticMesh;
-	UPROPERTY(EditInstanceOnly)
+	UPROPERTY(EditInstanceOnly,Category="MazeBuilder")
 	float gridSize = 100.0f;
-	UPROPERTY(EditInstanceOnly)
+	UPROPERTY(EditInstanceOnly, Category = "MazeBuilder")
 	float cornerSize = 30.0f;
-	UPROPERTY(EditInstanceOnly)
+	UPROPERTY(EditInstanceOnly, Category = "MazeBuilder")
 	float levelHeight = 50.0f;
-	//在场景中生成的对象时，用该name记录stroke的衍生模板名字,调试时临时打开
-	UPROPERTY(EditInstanceOnly)
-	// 衍生模板
-	FString name = "";
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "MazeBuilder")
 	bool bShowProceduralMesh = true;
+	//在场景中生成的对象时，用该name记录stroke的衍生模板名字,调试时临时打开
+	UPROPERTY(VisibleInstanceOnly, Category = "MazeBuilder")
+	FString name = "";
 	FString pattern = "0";
+	UPROPERTY(VisibleInstanceOnly, Category = "MazeBuilder")
 	FString path = "0";
-	Vector4 LU;
-	Vector4 LIU;
-	Vector4 RIU;
-	Vector4 RU;
-	Vector4 RUI;
-	Vector4 RDI;
-	Vector4 RD;
-	Vector4 RID;
-	Vector4 LID;
-	Vector4 LD;
-	Vector4 LDI;
-	Vector4 LUI;
-	Vector4 LIUI;
-	Vector4 RIUI;
-	Vector4 LIDI;
-	Vector4 RIDI;
-	Vector4 CTR;
+	UPROPERTY()
+	FCollectCode LU;
+	FCollectCode LIU;
+	FCollectCode RIU;
+	FCollectCode RU;
+	FCollectCode RUI;
+	FCollectCode RDI;
+	FCollectCode RD;
+	FCollectCode RID;
+	FCollectCode LID;
+	FCollectCode LD;
+	FCollectCode LDI;
+	FCollectCode LUI;
+	FCollectCode LIUI;
+	FCollectCode RIUI;
+	FCollectCode LIDI;
+	FCollectCode RIDI;
+	FCollectCode CTR;
 
 	// 7系列的参数
-	Vector4 LI2DI;
-	Vector4 RI2DI2;
-	Vector4 RIUI2;
+	FCollectCode LI2DI;
+	FCollectCode RI2DI2;
+	FCollectCode RIUI2;
 	//a系列参数
-	Vector4 RI2UI2;
-	Vector4 LI2DI2;
+	FCollectCode RI2UI2;
+	FCollectCode LI2DI2;
 
 	TArray<FColor> ColorArr; //不同阶层的颜色常量
 
@@ -140,15 +143,15 @@ public:
 	void CollectBaseMeshData(FString szPattern);
 	void CollectCompleteMeshData(FString szPattern);
 
-	template<typename Vector4,typename ... Args> void CollVertData(Vector4 vec,Args ... args);
-	template<typename Vector4> void CollVertData(Vector4 vec);
+	template<typename FCollectCode,typename ... Args> void CollVertData(FCollectCode vec,Args ... args);
+	template<typename FCollectCode> void CollVertData(FCollectCode vec);
 	//LevelUp 将点提升一个高度
-	Vector4 Lv(Vector4 point, int level = 1, int ColorIndex = 0);
+	FCollectCode Lv(FCollectCode point, int level = 1, int ColorIndex = 0);
 
 	//计算高度的中间点,用于斜坡的绘制
-	Vector4 Mh3(Vector4 point);
+	FCollectCode Mh3(FCollectCode point);
 
-	Vector4 Mh7(Vector4 point);
+	FCollectCode Mh7(FCollectCode point);
 
 	void InitPoints();
 

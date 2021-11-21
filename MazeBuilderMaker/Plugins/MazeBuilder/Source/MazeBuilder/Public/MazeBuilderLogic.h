@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Dialogs/Dialogs.h"
 #include "Editor.h"
-#include "Vector4.h"
 #include "UObject/ConstructorHelpers.h"
 #include "MazeBuilderUltility.h"
 #include "MazeBuilderBrushTemplate.h"
@@ -44,8 +43,8 @@ public:
 	static UWorld* world;
 	static TArray<FIntVector> GetBasicBrush();
 	static TArray<FIntVector> BasicBrush;
-	static TArray<Vector4> GetSrcTable();
-	static TArray<Vector4> SrcTable;
+	static TArray<FCollectCode> GetSrcTable();
+	static TArray<FCollectCode> SrcTable;
 	static bool startPaint;
 	static int startLevel;
 	static FVector curPoint;

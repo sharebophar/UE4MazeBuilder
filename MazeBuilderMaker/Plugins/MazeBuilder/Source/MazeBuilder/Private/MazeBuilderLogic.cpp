@@ -377,15 +377,15 @@ TArray<FIntVector> FMazeBuilderLogic::GetBasicBrush()
 }
 
 // 获取原始笔刷和翻转后的笔刷
-TArray<Vector4> FMazeBuilderLogic::GetSrcTable()
+TArray<FCollectCode> FMazeBuilderLogic::GetSrcTable()
 {
-	TArray<Vector4> srcTable;
-	srcTable.Add(Vector4(0x0, 0x0, 0x0, 0x0));
-	srcTable.Add(Vector4(0x2, 0x4, 0x8, 0x1));
-	srcTable.Add(Vector4(0x3, 0x6, 0xC, 0x9));
-	srcTable.Add(Vector4(0x7, 0xE, 0xD, 0xB));
-	srcTable.Add(Vector4(0x5, 0xA, 0x5, 0xA));
-	srcTable.Add(Vector4(0xF, 0xF, 0xF, 0xF));
+	TArray<FCollectCode> srcTable;
+	srcTable.Add(FCollectCode(0x0, 0x0, 0x0, 0x0));
+	srcTable.Add(FCollectCode(0x2, 0x4, 0x8, 0x1));
+	srcTable.Add(FCollectCode(0x3, 0x6, 0xC, 0x9));
+	srcTable.Add(FCollectCode(0x7, 0xE, 0xD, 0xB));
+	srcTable.Add(FCollectCode(0x5, 0xA, 0x5, 0xA));
+	srcTable.Add(FCollectCode(0xF, 0xF, 0xF, 0xF));
 	return srcTable;
 }
 
@@ -695,7 +695,7 @@ float FMazeBuilderLogic::levelHeight = 50;
 FString FMazeBuilderLogic::style = "T";
 TSharedPtr<FMazeBuilderMapData> FMazeBuilderLogic::mapData = MakeShareable(new FMazeBuilderMapData());
 TArray<FIntVector> FMazeBuilderLogic::BasicBrush = FMazeBuilderLogic::GetBasicBrush();
-TArray<Vector4> FMazeBuilderLogic::SrcTable = FMazeBuilderLogic::GetSrcTable();
+TArray<FCollectCode> FMazeBuilderLogic::SrcTable = FMazeBuilderLogic::GetSrcTable();
 FString FMazeBuilderLogic::BrushTemplatePath = "/Game/MeshBrushTemplate1";
 UWorld* FMazeBuilderLogic::world = nullptr;
 PRAGMA_ENABLE_OPTIMIZATION
