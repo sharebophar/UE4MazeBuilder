@@ -8,7 +8,7 @@ FMazeBuilderUltility::~FMazeBuilderUltility()
 {
 }
 
-FString FMazeBuilderUltility::IntToBin(int n)
+FString FMazeBuilderUltility::IntToBin(int n,bool isFixed4Num)
 {
 	int m = n;
 	FString result;
@@ -19,7 +19,16 @@ FString FMazeBuilderUltility::IntToBin(int n)
 		result += FString::FromInt(modVar);
 	}
 	result = result.Reverse();
-	return result;
+
+	FString fixedStr = "";
+	if (isFixed4Num)
+	{
+		int strLen = result.Len();
+		if (strLen < 4) {
+			fixedStr.AppendChars("0", 4 - strLen);
+		}
+	}
+	return fixedStr+result;
 }
 
 FString FMazeBuilderUltility::IntToHex(int n)
@@ -73,10 +82,10 @@ int FMazeBuilderUltility::BinToInt(FString binStr)
 	return result;
 }
 
-FString FMazeBuilderUltility::HexToBin(TCHAR hexChar)
+FString FMazeBuilderUltility::HexToBin(TCHAR hexChar, bool isFixed4Num)
 {
 	int a = HexToInt(hexChar);
-	return IntToBin(a);
+	return IntToBin(a,isFixed4Num);
 }
 
 FString FMazeBuilderUltility::BinToHex(FString binStr)
@@ -113,6 +122,29 @@ FString FMazeBuilderUltility::GetPathCode(FString name)
 		pathCode = (*infoArr)[2];
 	}
 	return pathCode;
+}
+
+/*
+* 从衍生模板名称中获得path的连接关系，作为调试信息显示在stroke中
+*/
+FString FMazeBuilderUltility::GetDebugPathInfo(FString target_name,bool isFindedSrcCode)
+{
+	FString fixedStr = isFindedSrcCode ? "" : "...cannot find the source code";
+	TArray<FString> *infoArr = new TArray<FString>();
+	target_name.ParseIntoArray(*infoArr, TEXT("_"), false);
+	FString pathCode = "0";
+	if (infoArr->Num() > 1)
+	{
+		pathCode = (*infoArr)[1];
+	}
+
+	FString binPathCode = HexToBin(pathCode[0],true);
+	FString topConnect = binPathCode[0] == '1' ? "true" : "false";
+	FString rightConnect = binPathCode[1] == '1' ? "true" : "false";
+	FString bottomConnect = binPathCode[2] == '1' ? "true" : "false";
+	FString leftConnect = binPathCode[3] == '1' ? "true" : "false";
+	FString result = "top:" + topConnect + ",right:" + rightConnect + ",bottom:" + bottomConnect + ",left:" + leftConnect+";"+fixedStr;
+	return result;
 }
 
 //BrushTemplate内部调用

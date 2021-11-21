@@ -295,6 +295,12 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int 
 				 //Utility.DebugText("curr_level_code:" + curr_level_code + " target_name:" + target_name + " curr_code:" + curr_code + " fix_code:" + IntAsHex(fix_code) + " level:" + level + " drawLevel：" + drawLevel+ "\n");
 			 }
 
+			//提前获取当前格子的笔刷，当绘制时计算出来的新笔刷无法获得源笔刷时，将该格子笔刷的Path信息更新，方便查错
+			 int row = r + brush[0];
+			 int col = c + brush[1];
+			 FIntPoint pos2d = FIntPoint(row, col);
+			 AMazeBuilderBrushTemplate* old_obj = mapData->GetStrokeAt(pos2d);
+
 			 //表现填充
 			 TSharedPtr<FMazeBuilderStrokeInfo> stroke_info = GetSourceStroke(target_name);
 			 if (stroke_info != nullptr)
@@ -311,6 +317,7 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int 
 				 if (stroke == nullptr) return "0";
 				 //stroke->Tags[0] = FName(target_name);
 				 stroke->name = target_name; // target_name为衍生模板
+				 stroke->path = FMazeBuilderUltility::GetDebugPathInfo(target_name, true);
 				 //stroke.transform.Rotate(Vector3.right, -90f);
 				 //stroke.transform.Rotate(Vector3.up, change_type * 90f);
 				 //obj->Rename(TEXT("0"));
@@ -325,10 +332,6 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int 
 				 stroke->SetActorRotation(FQuat(FVector(0, 0, 1), change_type * PI / 2));
 				 stroke->SetActorLocation(stroke_pos);
  ////////////////////////////////////////////////////////////
-				 int row = r + brush[0];
-				 int col = c + brush[1];
-				 FIntPoint pos2d = FIntPoint(row, col);
-				 AMazeBuilderBrushTemplate* old_obj = mapData->GetStrokeAt(pos2d);
 				 if (old_obj != nullptr)
 				 {
 					 //world->DestroyActor(old_obj);
@@ -350,7 +353,7 @@ FString FMazeBuilderLogic::DrawStroke(TArray<FIntVector> brushStyle, int r, int 
 			 else
 			 {
 				 UE_LOG(LogTemp, Warning, TEXT("target name %s stroke cannot calculate the source stroke"), *target_name);
-				 //Utility.DebugText(target_name+"没有计算出所得的源模型");
+				 old_obj->path = FMazeBuilderUltility::GetDebugPathInfo(target_name, false);
 				 return target_name;
 			 }
 
@@ -572,7 +575,12 @@ void FMazeBuilderLogic::ReplacePathStroke(TSharedPtr<FMazeBuilderStrokeInfo> str
 		replaceName += "_" + FString::FromInt(index); // 原生模板的码
 		brushClass = LoadBrushClass(replaceName);
 	}
-	if (brushClass == nullptr) return;
+	if (brushClass == nullptr)
+	{
+		// 资源找不到时，提示path信息
+		stroke_info->obj->path = FMazeBuilderUltility::GetDebugPathInfo(replaceName, false);
+		return;
+	}
 
 	AMazeBuilderBrushTemplate* stroke = world->SpawnActor<AMazeBuilderBrushTemplate>(brushClass);
 	//GameObject stroke = GameObject.Instantiate(child.gameObject);
@@ -580,7 +588,7 @@ void FMazeBuilderLogic::ReplacePathStroke(TSharedPtr<FMazeBuilderStrokeInfo> str
 	UE_LOG(LogTemp, Warning, TEXT("path is:%s"), *(stroke_info->path->ToString()));
 	FString realName = FMazeBuilderUltility::GetStrokeCode(stroke_info->obj->name); 
 	stroke->name = realName + "_" + stroke_info->path->ToString(); //衍生模板码，但style是多少已经无所谓了，不处理了
-
+	stroke->path = FMazeBuilderUltility::GetDebugPathInfo(stroke->name, true);
 	FString parentName = stroke->GetClass()->GetSuperClass()->GetName();
 	if (parentName == "MazeBuilderBrushTemplate")
 	{
